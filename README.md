@@ -1,6 +1,20 @@
 # Portfolio site
 
-Next.js, deployed on Vercel's free plan. Static, no database, no runtime cost.
+Next.js on Vercel's free plan. Static, no database, no runtime cost.
+
+Built on Tailwind v4 and shadcn/ui, with light and dark themes driven by
+`next-themes` and a system default. Every page reads from `content/site.ts`, so
+changing a claim is a one-line edit rather than a hunt through JSX.
+
+## What is here
+
+* **Home** — the headline claim, the stats, and the four projects.
+* **Projects** — each one with what it is, what it demonstrates, and a link.
+* **Experience** — roles with a summary, the specific work, and the stack.
+* **About** — the longer version, and the tools.
+* **Contact** — a form that posts to Web3Forms, so there is no backend and no
+  address sitting in the page source for scrapers. Without a key configured it
+  says so and falls back to a plain address rather than swallowing a message.
 
 ## Editing
 
@@ -27,7 +41,7 @@ whose numbers are a week old.
 
 ## Setup
 
-Node 22 or newer. No key, no database, no environment variables.
+Node 22 or newer. No database. One optional environment variable.
 
 ```bash
 git clone git@github.com-personal:iamwaleediqbal/portfolio.git
@@ -45,4 +59,14 @@ Then, before deploying:
 3. `npm run build` to confirm it compiles.
 
 Deploy on [vercel.com](https://vercel.com): **Add New → Project**, import
-`portfolio`, deploy. There is nothing to configure.
+`portfolio`, deploy.
+
+One environment variable, and only if you want the contact form to work:
+
+| Name | Value |
+|---|---|
+| `NEXT_PUBLIC_WEB3FORMS_KEY` | a free key from [web3forms.com](https://web3forms.com) |
+
+It is public by design — Web3Forms keys are meant to sit in client code, and the
+form carries a honeypot field that bots fill and people never see. Without the
+key the form does not pretend to work.

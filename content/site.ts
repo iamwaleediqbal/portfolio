@@ -11,21 +11,78 @@ export const profile = {
   role: "Senior Software Engineer",
   focus: "Agent systems, evaluation, and the full stack around them",
   location: "Faisalabad, Pakistan",
+  photo: "/waleed.jpg",
+  available: "Open to senior roles and contract work, remote or relocating",
   email: "waleediqbal28@gmail.com",
   github: "https://github.com/iamwaleediqbal",
   linkedin: "https://www.linkedin.com/in/iamwaleediqbal",
+  headline: "I build agent systems that survive contact with real users, and the tooling that proves whether they do.",
   intro: [
-    "I build agent systems that survive contact with real users, and the tooling that proves whether they do.",
-    "Since 2023 my full time work has been an evaluation platform for computer-use agents: a Python and Postgres backend, a Next.js front end, running batches of model attempts against browser and desktop environments, grading them, and packaging the results for delivery. It runs OpenAI, Anthropic, Gemini and self-hosted models through one code path, which is harder than it sounds, because every provider returns a different action format and they all have to mean the same thing before anything downstream can use them.",
-    "Before that I spent three years on client products in Ruby on Rails, React and Node, including a Shopify app with Stripe billing and a rebuild of an existing product on Next.js and Django.",
-    "That platform work is not public. So the projects below are the same ideas rebuilt in the open, small enough to read in one sitting.",
+    "I have been shipping production software since 2021 — Ruby on Rails, React, Node, Python and Next.js — across commerce, publishing and fintech products, and for the last three years on agent systems full time.",
+    "That current work is an evaluation platform for computer-use agents: a Python and Postgres backend with a Next.js front end, running batches of model attempts against browser and desktop environments, grading them against a known-good end state, and packaging the results for delivery to the client.",
+    "It drives OpenAI, Anthropic, Gemini and self-hosted models through one code path. That is harder than it sounds: every provider returns a different action format, in a different coordinate space, with token accounting that disagrees about what it is counting. All of it has to mean the same thing before anything downstream can use it.",
+    "The earlier years are where the engineering habits came from — client products with real deadlines, a Shopify app with Stripe billing and webhook handling, and a full rebuild of a live product onto Next.js and Django without dropping its users.",
+    "That platform is not public. So the projects below are the same ideas rebuilt in the open, small enough to read in one sitting.",
+  ],
+  // Facts about the work, not about the website. Anything that only makes sense
+  // to whoever built this page does not belong on it.
+  stats: [
+    { value: 5, suffix: "+", label: "Years in production", hint: "Rails, React, Python, Next.js" },
+    { value: 3, suffix: "", label: "Years on agent systems", hint: "Evaluation platforms, full time" },
+    { value: 4, suffix: "", label: "Model providers unified", hint: "One action schema across all" },
+    { value: 4, suffix: "", label: "Products shipped", hint: "Commerce, publishing, fintech" },
   ],
 };
+
+/**
+ * Grouped so the page reads as capability rather than a word cloud. Colour is
+ * assigned per group in fixed order from a validated categorical palette — the
+ * label always carries the meaning, the dot only reinforces it.
+ */
+export const skills = [
+  {
+    group: "AI & agents",
+    tone: 1,
+    items: [
+      "Agent architecture",
+      "LLM evaluation",
+      "Tool calling",
+      "RAG",
+      "OpenAI",
+      "Anthropic",
+      "Gemini",
+      "OpenRouter",
+      "vLLM",
+    ],
+  },
+  {
+    group: "Backend",
+    tone: 2,
+    items: ["Python", "FastAPI", "Celery", "Ruby on Rails", "Node.js", "PostgreSQL", "Redis"],
+  },
+  {
+    group: "Frontend",
+    tone: 3,
+    items: ["TypeScript", "Next.js", "React", "Remix", "Tailwind", "shadcn/ui"],
+  },
+  {
+    group: "Infrastructure",
+    tone: 4,
+    items: ["Docker", "Kubernetes", "GCP", "GitHub Actions", "GitLab CI", "Vercel"],
+  },
+  {
+    group: "Commerce",
+    tone: 5,
+    items: ["Shopify apps", "Stripe", "Webhooks", "Prisma"],
+  },
+];
 
 export interface Project {
   slug: string;
   name: string;
   tagline: string;
+  /** What this is a reduced, public version of. */
+  mirrors?: string;
   what: string;
   why: string;
   stack: string[];
@@ -41,6 +98,8 @@ export const projects: Project[] = [
     name: "polyact",
     tagline: "One action schema for computer-use agents",
     status: "open source",
+    mirrors:
+      "The provider-agnostic layer inside the evaluation platform I work on, extracted and rewritten in the open.",
     what: "A Python library that turns four incompatible provider response formats into one record, in real screen pixels, with token accounting that survives a provider change.",
     why: "The largest source of quiet, score-corrupting bugs in agent evaluation is not prompting or grading. It is that providers disagree about what their own output means, and the disagreements do not raise. They degrade.",
     stack: ["Python", "async", "pytest"],
@@ -57,6 +116,8 @@ export const projects: Project[] = [
     name: "agentscore",
     tagline: "An evaluation harness that refuses to overclaim",
     status: "open source",
+    mirrors:
+      "The batch runner and scoring pipeline, minus the queueing, the reviewer workflow and the delivery packaging.",
     what: "Runs a task suite against several models, repeats every task, and reports pass rates with confidence intervals instead of a single number. Benchmarks free models, because that is the question nobody with a budget bothers to answer.",
     why: "One run is not a result. A leaderboard built from single runs reorders itself nightly for no reason anyone can explain.",
     stack: ["Python", "GitHub Actions", "OpenRouter"],
@@ -73,7 +134,9 @@ export const projects: Project[] = [
     name: "clickgym",
     tagline: "A browser gym graded on final state, not the route taken",
     status: "live demo",
-    what: "Point a model at a mailbox, give it a task in English, and watch what it changes. The whole app lives in local storage, so grading is a comparison between two JSON values rather than an argument about what the screen looked like.",
+    mirrors:
+      "A single browser gym with one task suite. The production version runs hundreds of tasks across cloned web apps and full desktop VMs, on a queue, with human review.",
+    what: "Point a model at a mailbox, give it a task in English, and watch what it changes. Each run gets its own environment and its own storage, graded on the state it leaves behind — with a full action timeline, per-turn token accounting and a screenshot of every step.",
     why: "A model that does everything you asked and then one thing more produces a state that matches on every required field. Check only the required fields and it passes. It should not.",
     stack: ["Next.js", "TypeScript", "Vercel Edge"],
     repo: "https://github.com/iamwaleediqbal/clickgym",
@@ -90,6 +153,7 @@ export const projects: Project[] = [
     name: "Anchorly",
     tagline: "A grounded AI store assistant for Shopify merchants",
     status: "product",
+    mirrors: "Not a reduction — this one ships to merchants.",
     what: "Every factual answer comes from a live database lookup, never from model memory. Prices, stock, policies and order status are quoted from the merchant's own synced data.",
     why: "Competing chatbot apps get churned over for inventing prices and fabricating policies. The whole architecture exists to make that class of failure structurally impossible rather than merely unlikely.",
     stack: ["Remix", "TypeScript", "Prisma", "Shopify"],
@@ -101,25 +165,44 @@ export const projects: Project[] = [
   },
 ];
 
+/** Read on the experience page above the timeline. */
+export const career = {
+  since: 2021,
+  headline: "Production software since 2021, agent systems since 2023",
+  summary:
+    "Five years building and running products people depend on, the last three of them full time on evaluation infrastructure for computer-use agents. Backend and front end both — I have never had the luxury of only owning one half.",
+};
+
 export const experience = [
   {
     company: "Turing",
     role: "Senior Software Engineer",
     period: "Sept 2023 - present",
+    summary:
+      "Evaluation infrastructure for computer-use agents, end to end: the environments, the runner, the grading, and the console people read the results in.",
     lines: [
-      "Evaluation platform for computer-use agents. FastAPI, Postgres, Celery, Next.js, GCP.",
-      "One provider-agnostic layer over OpenAI, Anthropic, Gemini and self-hosted models.",
-      "Deliverables go to the client, not into a drawer.",
+      "Built and run an evaluation platform on FastAPI, Postgres, Celery and Next.js, deployed on GCP, executing batches of model attempts against cloned web applications and full desktop virtual machines.",
+      "Wrote the provider-agnostic layer that drives OpenAI, Anthropic, Gemini and self-hosted models through a single action schema — normalising three different coordinate conventions and three different definitions of a token before anything downstream sees them.",
+      "Designed grading against a known-good end state rather than the action trajectory, so a model that reaches the goal a different way still passes, and one that reaches it and then keeps going is reported as overreach instead of a pass.",
+      "Made runs that never reached a model unscored rather than zero. Counting transport failures as model failures quietly biases every aggregate computed afterwards, and that bias is invisible once it is in the average.",
+      "Report pass rates with confidence intervals, because a leaderboard built on a few dozen attempts per model puts most of its ordering inside the noise, and a client acting on that ordering deserves to know which gaps are real.",
+      "Own the queue, retries and artifact storage that make a batch resumable: a run that dies six hours in resumes rather than restarts.",
+      "Work directly against client deliverables and timelines, including human review workflows layered on top of the automated grading.",
     ],
+    stack: ["Python", "FastAPI", "Celery", "PostgreSQL", "Next.js", "TypeScript", "GCP", "Playwright"],
   },
   {
     company: "Softaims",
     role: "Software Engineer",
     period: "Aug 2021 - July 2024",
+    summary:
+      "Client product work across commerce, publishing and fintech — the years that taught me what shipping to a deadline actually costs.",
     lines: [
-      "Client products in Ruby on Rails, React and Node.",
-      "A Shopify app with Stripe billing and webhook handling.",
-      "A rebuild of an existing product on Next.js and Django.",
+      "Shipped and maintained client products in Ruby on Rails, React and Node, owning features from requirements through deployment and the support that followed.",
+      "Built a Shopify app with Stripe billing and webhook handling, including the idempotency and replay handling that keeps a billing webhook from charging twice when the network retries it.",
+      "Rebuilt an existing live product onto Next.js and Django, migrating its data and its users without a hard cutover.",
+      "Worked across the stack throughout — schema and query work at one end, interface and state management at the other.",
     ],
+    stack: ["Ruby on Rails", "React", "Node.js", "Next.js", "Django", "PostgreSQL", "Stripe", "Shopify"],
   },
 ];
