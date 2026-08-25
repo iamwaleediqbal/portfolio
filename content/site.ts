@@ -77,6 +77,64 @@ export const skills = [
   },
 ];
 
+/**
+ * The three open projects, read as one system.
+ *
+ * They are not packages that import one another — two are Python and one is
+ * TypeScript, and each is meant to be readable on its own in a sitting. What
+ * they share is a pipeline: the same three seams the production platform has,
+ * pulled apart so each can be looked at without the other two in the way.
+ */
+export const system = {
+  lead:
+    "Measuring whether an agent can operate software has three separate problems in it, and " +
+    "conflating them is how evaluation quietly goes wrong. Each project below is one of them.",
+  layers: [
+    {
+      slug: "polyact",
+      step: "The model answers",
+      role: "Translate four provider dialects into one record",
+      owns:
+        "A model says where to click in whatever convention its provider chose, and reports " +
+        "tokens by whatever it counts. polyact turns that into one action in real screen " +
+        "pixels, with usage that means the same thing across providers.",
+      breaks:
+        "Read Gemini's 0–1000 grid as pixels and the agent clicks the top-left corner of every " +
+        "screen forever. It scores zero and reads as a weak model. Nothing raises.",
+    },
+    {
+      slug: "clickgym",
+      step: "Something happens",
+      role: "Give it an application, and judge what it left behind",
+      owns:
+        "A real mail client, a task in English, and a grader that compares the final state " +
+        "against a known-good one — never the route taken, because there are many correct " +
+        "routes and an agent that finds a shorter one has not failed.",
+      breaks:
+        "Check only that the required changes happened and an agent that did the task and then " +
+        "one thing more passes. Forwarding a customer's invoice to accounts is reasonable " +
+        "behaviour and still a failure.",
+    },
+    {
+      slug: "agentscore",
+      step: "It happens again, many times",
+      role: "Turn attempts into a claim, with the uncertainty attached",
+      owns:
+        "Repeats every task across models and reports pass rates as intervals rather than " +
+        "single numbers, keeping transport failures out of the scores entirely.",
+      breaks:
+        "One run is not a result. A leaderboard built from single runs reorders itself for no " +
+        "reason anyone can explain, and three out of three gets reported as 100%.",
+    },
+  ],
+  honesty:
+    "They do not depend on each other as code, and that is deliberate: each is small enough to " +
+    "read end to end, and wiring them together would hide the seams rather than show them. " +
+    "The dependency is in the argument. Grading is worthless if the coordinates were " +
+    "mistranslated on the way in, and a correct grade on one attempt still says nothing until " +
+    "it has been repeated.",
+};
+
 export interface Project {
   slug: string;
   name: string;
@@ -126,7 +184,7 @@ export const projects: Project[] = [
       "Wilson intervals, so three out of three reports 100% with a lower bound near 44%, which is the correct amount of confidence to have in three attempts.",
       "Overlapping intervals share a rank and are marked tied. Ranking them anyway invents a difference the data cannot support.",
       "Deterministic checks run first. A judge is a model, so it brings its own variance on top of the variance you were trying to measure, and it is a last resort rather than a default.",
-      "Runs nightly in GitHub Actions and commits a JSON file. No server, no database.",
+      "Runs in GitHub Actions on demand and commits a JSON file. No server, no database — and no schedule, because a benchmark nobody watched is a number nobody should trust.",
     ],
   },
   {
@@ -145,7 +203,7 @@ export const projects: Project[] = [
       "Four verdicts, not two: pass, incomplete, did more than it was asked, and both.",
       "One task exists purely to provoke the third. Forwarding a customer's invoice to accounts would be reasonable behaviour. It is still a fail, and the verdict names the change.",
       "Opening an email marks it read, deliberately, so an agent that hunts around for the right message shows up as having changed three things it was not asked to change.",
-      "25 tests that need nothing installed.",
+      "261 tests that need nothing installed, and 75 mutations that prove they can fail.",
     ],
   },
   {

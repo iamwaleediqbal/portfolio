@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Leaderboard } from "@/components/Leaderboard";
 import { ProjectCard } from "@/components/ProjectCard";
 import { Reveal } from "@/components/Reveal";
+import { SystemMap } from "@/components/SystemMap";
 import { projects } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -27,6 +28,18 @@ export default function Projects() {
           </p>
         </div>
       </header>
+
+      <section className="border-b">
+        <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6">
+          <h2 className="mb-6 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.09em] text-muted-foreground">
+            <span aria-hidden className="size-2.5 rounded-[3px] bg-chart-1" />
+            How the open projects fit together
+          </h2>
+          <Reveal>
+            <SystemMap />
+          </Reveal>
+        </div>
+      </section>
 
       <section className="mx-auto max-w-4xl space-y-4 px-5 py-12 sm:px-6">
         {projects.map((project, index) => (

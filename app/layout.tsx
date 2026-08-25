@@ -6,7 +6,19 @@ import { profile } from "@/content/site";
 
 import "./globals.css";
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://iamwaleediqbal.vercel.app";
+/*
+ * The deployed origin, used as `metadataBase` — which is what turns the
+ * relative image path below into the absolute URL a social card needs.
+ *
+ * The fallback is the real domain, and it was not: it read
+ * `iamwaleediqbal.vercel.app`, which 404s. Nothing on the page breaks when this
+ * is wrong, which is exactly why it went unnoticed — the only symptom is that
+ * every link preview of this site, on every platform, silently shows no image.
+ *
+ * Set NEXT_PUBLIC_SITE_URL on the deployment anyway. A default that happens to
+ * be right today is not a configuration.
+ */
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://waleediqbal.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),

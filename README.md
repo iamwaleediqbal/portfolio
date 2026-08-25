@@ -61,12 +61,14 @@ Then, before deploying:
 Deploy on [vercel.com](https://vercel.com): **Add New → Project**, import
 `portfolio`, deploy.
 
-One environment variable, and only if you want the contact form to work:
+Two environment variables:
 
 | Name | Value |
 |---|---|
-| `NEXT_PUBLIC_WEB3FORMS_KEY` | a free key from [web3forms.com](https://web3forms.com) |
+| `NEXT_PUBLIC_WEB3FORMS_KEY` | a free key from [web3forms.com](https://web3forms.com). Without it the contact form does not pretend to work — it says so and shows a plain address instead of swallowing the message. |
+| `NEXT_PUBLIC_SITE_URL` | the exact origin you deployed to, no trailing slash. It becomes `metadataBase`, which is what makes the social-card image an absolute URL. Get it wrong and **nothing on the page looks broken** — the only symptom is that every link preview of the site, everywhere, shows no image. |
 
-It is public by design — Web3Forms keys are meant to sit in client code, and the
-form carries a honeypot field that bots fill and people never see. Without the
-key the form does not pretend to work.
+The Web3Forms key is public by design — those keys are meant to sit in client
+code, and the form carries a honeypot field that bots fill and people never see.
+Both variables are `NEXT_PUBLIC_`, so both are visible in the bundle; neither is
+a secret and neither should ever be one.
