@@ -103,36 +103,40 @@ export const system = {
         "screen forever. It scores zero and reads as a weak model. Nothing raises.",
     },
     {
-      slug: "clickgym",
+      slug: "clickmail",
       step: "Something happens",
-      role: "Give it an application, and judge what it left behind",
+      role: "Be the application, and say what state you are in",
       owns:
-        "A real mail client, a task in English, and a grader that compares the final state " +
-        "against a known-good one — never the route taken, because there are many correct " +
-        "routes and an agent that finds a shorter one has not failed.",
+        "A mail client with fifty-two messages across seven folders, deployed publicly so anyone " +
+        "can click around it. It publishes two methods — reset and read — and knows nothing " +
+        "about tasks, grading or models.",
       breaks:
-        "Check only that the required changes happened and an agent that did the task and then " +
-        "one thing more passes. Forwarding a customer's invoice to accounts is reasonable " +
-        "behaviour and still a failure.",
+        "An environment that knows it is being tested is one whose results do not transfer. " +
+        "Keeping the grader inside it made the whole thing look like it could only ever score " +
+        "itself.",
     },
     {
       slug: "agentscore",
-      step: "It happens again, many times",
-      role: "Turn attempts into a claim, with the uncertainty attached",
+      step: "Somebody decides whether it worked",
+      role: "Drive the application, grade the result, and repeat it enough times to mean something",
       owns:
-        "Repeats every task across models and reports pass rates as intervals rather than " +
-        "single numbers, keeping transport failures out of the scores entirely.",
+        "The harness. It opens the environment in a real browser, fetches the world before the " +
+        "task and after it, grades one snapshot against the other, and keeps both — so a change " +
+        "to the grading logic is retested against every past run without paying for a single " +
+        "model call.",
       breaks:
-        "One run is not a result. A leaderboard built from single runs reorders itself for no " +
-        "reason anyone can explain, and three out of three gets reported as 100%.",
+        "One run is not a result, and a verdict you cannot recompute is a number you have to " +
+        "take on trust. A leaderboard built from single runs reorders itself for no reason " +
+        "anyone can explain, and three out of three gets reported as 100%.",
     },
   ],
   honesty:
-    "They do not depend on each other as code, and that is deliberate: each is small enough to " +
-    "read end to end, and wiring them together would hide the seams rather than show them. " +
-    "The dependency is in the argument. Grading is worthless if the coordinates were " +
-    "mistranslated on the way in, and a correct grade on one attempt still says nothing until " +
-    "it has been repeated.",
+    "The harness reaches the environment over HTTP, with no shared process and no privileged " +
+    "access — which is the only arrangement under which \"it could drive a real application\" " +
+    "means anything. polyact stays separate because it is a library, not a service. The " +
+    "dependency between them is in the argument rather than the imports: grading is worthless " +
+    "if the coordinates were mistranslated on the way in, and a correct grade on one attempt " +
+    "says nothing until it has been repeated.",
 };
 
 export interface Project {
@@ -172,11 +176,11 @@ export const projects: Project[] = [
   {
     slug: "agentscore",
     name: "agentscore",
-    tagline: "An evaluation harness that refuses to overclaim",
+    tagline: "The harness: drive it, grade it, and repeat it enough times to mean something",
     status: "open source",
     mirrors:
       "The batch runner and scoring pipeline, minus the queueing, the reviewer workflow and the delivery packaging.",
-    what: "Runs a task suite against several models, repeats every task, and reports pass rates with confidence intervals instead of a single number. Benchmarks free models, because that is the question nobody with a budget bothers to answer.",
+    what: "Opens an environment in a real browser, fetches the world before the task and after it, and grades one snapshot against the other — never the route taken. Both snapshots are kept, so a change to the grading logic is retested against every past run without a single model call. A separate suite repeats short tasks across free models and reports intervals rather than numbers.",
     why: "One run is not a result. A leaderboard built from single runs reorders itself nightly for no reason anyone can explain.",
     stack: ["Python", "GitHub Actions", "OpenRouter"],
     repo: "https://github.com/iamwaleediqbal/agentscore",
@@ -184,25 +188,27 @@ export const projects: Project[] = [
       "Wilson intervals, so three out of three reports 100% with a lower bound near 44%, which is the correct amount of confidence to have in three attempts.",
       "Overlapping intervals share a rank and are marked tied. Ranking them anyway invents a difference the data cannot support.",
       "Deterministic checks run first. A judge is a model, so it brings its own variance on top of the variance you were trying to measure, and it is a last resort rather than a default.",
-      "Runs in GitHub Actions on demand and commits a JSON file. No server, no database — and no schedule, because a benchmark nobody watched is a number nobody should trust.",
+      "Two snapshots in, a verdict out. Grading is a derivation, and one you cannot recompute is a number you have to trust.",
+      "The console shows the system prompts exactly as sent, generated from the same constants the runner uses rather than transcribed — a benchmark that paraphrases what it told the model is not reproducible by anyone reading it.",
+      "Runs in GitHub Actions on demand and commits a JSON file. No server, no database, no key on the deployment — and no schedule, because a benchmark nobody watched is a number nobody should trust.",
     ],
   },
   {
-    slug: "clickgym",
-    name: "clickgym",
-    tagline: "A browser gym graded on final state, not the route taken",
+    slug: "clickmail",
+    name: "clickmail",
+    tagline: "The application under test, and nothing else",
     status: "live demo",
     mirrors:
-      "A single browser gym with one task suite. The production version runs hundreds of tasks across cloned web apps and full desktop VMs, on a queue, with human review.",
-    what: "Point a model at a mailbox, give it a task in English, and watch what it changes. Each run gets its own environment and its own storage, graded on the state it leaves behind — with a full action timeline, per-turn token accounting and a screenshot of every step.",
-    why: "A model that does everything you asked and then one thing more produces a state that matches on every required field. Check only the required fields and it passes. It should not.",
+      "One of the environments the production platform grades. There they are cloned web apps and full desktop VMs booted from prebaked volumes; here it is a mail client small enough to read.",
+    what: "A public mail client — fifty-two messages, seven folders, search, labels, spam — that exists to be operated by something that is not a person. It publishes two methods, reset and read, and knows nothing about tasks, grading or models.",
+    why: "An environment that contains its own grader can only ever score itself. Separating them is what makes \"point the harness at a real application\" a question of writing an adapter rather than rewriting the grader.",
     stack: ["Next.js", "TypeScript", "Vercel Edge"],
-    repo: "https://github.com/iamwaleediqbal/clickgym",
-    live: "https://clickgym.vercel.app",
+    repo: "https://github.com/iamwaleediqbal/clickmail",
+    live: "https://clickmail.vercel.app",
     highlights: [
-      "Four verdicts, not two: pass, incomplete, did more than it was asked, and both.",
-      "One task exists purely to provoke the third. Forwarding a customer's invoice to accounts would be reasonable behaviour. It is still a fail, and the verdict names the change.",
-      "Opening an email marks it read, deliberately, so an agent that hunts around for the right message shows up as having changed three things it was not asked to change.",
+      "Two methods is the whole interface a harness gets: reset the world, read the world. No storage key, no DOM, no framework — the same surface a real application could be made to expose.",
+      "It also reports which controls it is currently rendering, so a harness can refuse to spend a turn on an action space the interface no longer offers. That pair has drifted before, in both directions.",
+      "Opening an email marks it read, deliberately, because that is what a mail client does — and it is the most common way an agent changes something nobody asked it to.",
       "261 tests that need nothing installed, and 75 mutations that prove they can fail.",
     ],
   },
