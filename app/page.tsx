@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Download } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -65,6 +65,18 @@ export default function Home() {
                 </Button>
                 <Button asChild variant="outline">
                   <Link href="/projects">See the work</Link>
+                </Button>
+                {/*
+                  `download` on a same-origin file, so it saves rather than
+                  opening a PDF viewer in place and losing the page behind it.
+                  The filename is set here because the served name is the one
+                  that ends up in someone's downloads folder for months.
+                */}
+                <Button asChild variant="outline">
+                  <a href={profile.cv} download="Waleed-Iqbal-CV.pdf">
+                    <Download className="size-3.5" />
+                    Download CV
+                  </a>
                 </Button>
                 <Button asChild variant="ghost">
                   <a href={profile.github}>GitHub</a>

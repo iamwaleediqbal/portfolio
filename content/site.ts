@@ -15,7 +15,22 @@ export const profile = {
   available: "Open to senior roles and contract work, remote or relocating",
   email: "waleediqbal28@gmail.com",
   github: "https://github.com/iamwaleediqbal",
-  linkedin: "https://www.linkedin.com/in/iamwaleediqbal",
+  /**
+   * Served from public/ rather than linked to a drive.
+   *
+   * A CV behind a share link is one permission change away from being a 404 for
+   * whoever is reading the page, and there is no way to find out that happened.
+   * A file in the repository ships with the deployment.
+   */
+  cv: "/Waleed_Iqbal_CV.pdf",
+  /**
+   * The real profile, which is not the GitHub handle.
+   *
+   * This was `/in/iamwaleediqbal` — assumed from the GitHub username, and a
+   * 404. It is the kind of wrong nobody catches on their own site: you never
+   * click your own LinkedIn link, and the page around it looks perfect.
+   */
+  linkedin: "https://www.linkedin.com/in/waleed-iqbal-208a97a3",
   headline: "I build agent systems that survive contact with real users, and the tooling that proves whether they do.",
   intro: [
     "I have been shipping production software since 2021 — Ruby on Rails, React, Node, Python and Next.js — across commerce, publishing and fintech products, and for the last three years on agent systems full time.",
@@ -182,7 +197,7 @@ export const projects: Project[] = [
       "The batch runner and scoring pipeline, minus the queueing, the reviewer workflow and the delivery packaging.",
     what: "Opens an environment in a real browser, fetches the world before the task and after it, and grades one snapshot against the other — never the route taken. Both snapshots are kept, so a change to the grading logic is retested against every past run without a single model call. A separate suite repeats short tasks across free models and reports intervals rather than numbers.",
     why: "One run is not a result. A leaderboard built from single runs reorders itself nightly for no reason anyone can explain.",
-    stack: ["Python", "GitHub Actions", "OpenRouter"],
+    stack: ["Next.js", "TypeScript", "Playwright", "Python", "OpenRouter"],
     repo: "https://github.com/iamwaleediqbal/agentscore",
     highlights: [
       "Wilson intervals, so three out of three reports 100% with a lower bound near 44%, which is the correct amount of confidence to have in three attempts.",
@@ -209,7 +224,7 @@ export const projects: Project[] = [
       "Two methods is the whole interface a harness gets: reset the world, read the world. No storage key, no DOM, no framework — the same surface a real application could be made to expose.",
       "It also reports which controls it is currently rendering, so a harness can refuse to spend a turn on an action space the interface no longer offers. That pair has drifted before, in both directions.",
       "Opening an email marks it read, deliberately, because that is what a mail client does — and it is the most common way an agent changes something nobody asked it to.",
-      "261 tests that need nothing installed, and 75 mutations that prove they can fail.",
+      "28 tests that need nothing installed, and 10 mutations that prove they can fail. The environment is meant to be small — the harness is where the 260 tests and 82 mutations live.",
     ],
   },
   {

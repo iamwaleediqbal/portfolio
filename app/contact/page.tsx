@@ -1,4 +1,4 @@
-import { Github, Linkedin, MapPin } from "lucide-react";
+import { FileDown, Github, Linkedin, MapPin } from "lucide-react";
 import type { Metadata } from "next";
 
 import { ContactForm } from "@/components/ContactForm";
@@ -75,6 +75,16 @@ export default function Contact() {
                 >
                   <Linkedin className="size-4" aria-hidden />
                   LinkedIn
+                </a>
+                {/* No target="_blank": a download does not navigate, so opening
+                    a tab for it leaves an empty one behind. */}
+                <a
+                  className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
+                  href={profile.cv}
+                  download="Waleed-Iqbal-CV.pdf"
+                >
+                  <FileDown className="size-4" aria-hidden />
+                  Download CV
                 </a>
               </div>
             </CardContent>

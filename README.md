@@ -23,7 +23,8 @@ edit rather than a hunt through JSX.
 
 Replace before deploying:
 
-* `iamwaleediqbal` in `content/site.ts` (GitHub and LinkedIn)
+* `iamwaleediqbal` in `content/site.ts` (GitHub; LinkedIn is a separate
+  handle and is set beside it)
 * `data/leaderboard.json` with a real run from
   [agentscore](https://github.com/iamwaleediqbal/agentscore)
 
