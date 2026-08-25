@@ -204,7 +204,7 @@ export const projects: Project[] = [
     why: "An environment that contains its own grader can only ever score itself. Separating them is what makes \"point the harness at a real application\" a question of writing an adapter rather than rewriting the grader.",
     stack: ["Next.js", "TypeScript", "Vercel Edge"],
     repo: "https://github.com/iamwaleediqbal/clickmail",
-    live: "https://clickmail.vercel.app",
+    live: "https://clickmail-sigma.vercel.app",
     highlights: [
       "Two methods is the whole interface a harness gets: reset the world, read the world. No storage key, no DOM, no framework — the same surface a real application could be made to expose.",
       "It also reports which controls it is currently rendering, so a harness can refuse to spend a turn on an action space the interface no longer offers. That pair has drifted before, in both directions.",
