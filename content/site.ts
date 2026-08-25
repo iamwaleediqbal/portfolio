@@ -199,6 +199,7 @@ export const projects: Project[] = [
     why: "One run is not a result. A leaderboard built from single runs reorders itself nightly for no reason anyone can explain.",
     stack: ["Next.js", "TypeScript", "Playwright", "Python", "OpenRouter"],
     repo: "https://github.com/iamwaleediqbal/agentscore",
+    live: "https://agentscore-sigma.vercel.app",
     highlights: [
       "Wilson intervals, so three out of three reports 100% with a lower bound near 44%, which is the correct amount of confidence to have in three attempts.",
       "Overlapping intervals share a rank and are marked tied. Ranking them anyway invents a difference the data cannot support.",
