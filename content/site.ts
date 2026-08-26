@@ -2,8 +2,8 @@
  * Everything editable lives here.
  *
  * The pages read from this file so that changing a claim is a one-line edit
- * rather than a hunt through JSX. Replace iamwaleediqbal and the contact details
- * before deploying.
+ * rather than a hunt through JSX — and so that a claim appears in exactly one
+ * place, which is what stops the same number drifting between two pages.
  */
 
 export const profile = {
@@ -123,7 +123,7 @@ export const system = {
       role: "Be the application, and say what state you are in",
       owns:
         "A mail client with fifty-two messages across seven folders, deployed publicly so anyone " +
-        "can click around it. It publishes two methods — reset and read — and knows nothing " +
+        "can click around it. It publishes a read-and-reset contract and knows nothing " +
         "about tasks, grading or models.",
       breaks:
         "An environment that knows it is being tested is one whose results do not transfer. " +
@@ -185,7 +185,7 @@ export const projects: Project[] = [
       "Gemini emits 0-1000 coordinates, OpenAI emits pixels. Read one as the other and the agent clicks the top-left corner of every screen forever, scores zero, and looks like a weak model. This is not hypothetical: agentscore hit it on a real paid run, and now carries the same rules.",
       "OpenAI's input token count includes cached tokens. Anthropic's excludes them. Get it backwards and a cached run looks cheaper than it was until the invoice arrives.",
       "A broken proxy is not a bad model. Transport failures are kept separate from model failures all the way to the report, because an attempt that never reached a model is an absent measurement, not a zero.",
-      "55 tests, no network.",
+      "The whole suite runs offline in under a second, because the model call is injected rather than made inside the loop — which is also what makes the budget and termination logic testable at all.",
     ],
   },
   {
@@ -218,16 +218,16 @@ export const projects: Project[] = [
     status: "live demo",
     mirrors:
       "One of the environments the production platform grades. There they are cloned web apps and full desktop VMs booted from prebaked volumes; here it is a mail client small enough to read.",
-    what: "A public mail client — fifty-two messages, seven folders, search, labels, spam — that exists to be operated by something that is not a person. It publishes two methods, reset and read, and knows nothing about tasks, grading or models.",
+    what: "A public mail client — fifty-two messages, seven folders, search, labels, spam — that exists to be operated by something that is not a person. It publishes a small read-and-reset contract and knows nothing about tasks, grading or models.",
     why: "An environment that contains its own grader can only ever score itself. Separating them is what makes \"point the harness at a real application\" a question of writing an adapter rather than rewriting the grader.",
-    stack: ["Next.js", "TypeScript", "Vercel Edge"],
+    stack: ["Next.js", "TypeScript", "Vercel"],
     repo: "https://github.com/iamwaleediqbal/clickmail",
     live: "https://clickmail-sigma.vercel.app",
     highlights: [
-      "Two methods is the whole interface a harness gets: reset the world, read the world. No storage key, no DOM, no framework — the same surface a real application could be made to expose.",
+      "Read and reset is the whole interface a harness gets: report the world, or discard it and report the world it starts in. There is deliberately no way to install a state from outside — a driver that could write the world could write the answer. No storage key, no DOM, no framework; the same surface a real application could be made to expose.",
       "It also reports which controls it is currently rendering, so a harness can refuse to spend a turn on an action space the interface no longer offers. That pair has drifted before, in both directions.",
       "Opening an email marks it read, deliberately, because that is what a mail client does — and it is the most common way an agent changes something nobody asked it to.",
-      "28 tests that need nothing installed, and 10 mutations that prove they can fail. The environment is meant to be small — the harness is where the 260 tests and 82 mutations live.",
+      "The suite needs nothing installed — Node's own test runner, no dependencies — and a mutation check reintroduces every bug it is meant to catch, one at a time, failing if the suite stays green. A passing suite proves nothing if it could not go red. The environment is deliberately small; the harness is where most of the testing lives.",
     ],
   },
   {

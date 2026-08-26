@@ -1,0 +1,66 @@
+{
+  "source": "agentscore",
+  "source_url": "https://agentscore-sigma.vercel.app/models",
+  "generated_at": "2026-08-25T19-33-09",
+  "driver": "playwright/chromium",
+  "runs": 20,
+  "tasks": 6,
+  "models": [
+    {
+      "model": "google/gemini-3.7-flash",
+      "space": "tool",
+      "tasks": 6,
+      "passes": 6,
+      "scored": 6,
+      "unscored": 0,
+      "cost": 0.074856,
+      "pass_rate": 1,
+      "ci_low": 0.6097,
+      "ci_high": 1,
+      "rank": 1,
+      "tied": true
+    },
+    {
+      "model": "dots-studio/dots-3-note-preview:free",
+      "space": "tool",
+      "tasks": 6,
+      "passes": 5,
+      "scored": 6,
+      "unscored": 0,
+      "cost": 0,
+      "pass_rate": 0.8333,
+      "ci_low": 0.4365,
+      "ci_high": 0.9699,
+      "rank": 1,
+      "tied": true
+    },
+    {
+      "model": "google/gemini-3.7-flash",
+      "space": "computer",
+      "tasks": 6,
+      "passes": 3,
+      "scored": 6,
+      "unscored": 0,
+      "cost": 0.054806,
+      "pass_rate": 0.5,
+      "ci_low": 0.1876,
+      "ci_high": 0.8124,
+      "rank": 1,
+      "tied": true
+    },
+    {
+      "model": "dots-studio/dots-3-note-preview:free",
+      "space": "computer",
+      "tasks": 2,
+      "passes": 0,
+      "scored": 2,
+      "unscored": 0,
+      "cost": 0,
+      "pass_rate": 0,
+      "ci_low": 0,
+      "ci_high": 0.6576,
+      "rank": 1,
+      "tied": true
+    }
+  ]
+}

@@ -53,12 +53,14 @@ export default function Projects() {
         <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6">
           <h2 className="mb-3 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.09em] text-muted-foreground">
             <span aria-hidden className="size-2.5 rounded-[3px] bg-chart-4" />
-            Free model leaderboard
+            Measured, not claimed
           </h2>
           <p className="mb-6 max-w-[66ch] text-muted-foreground">
-            Produced by <strong className="font-medium text-foreground">agentscore</strong>, run
-            nightly in GitHub Actions. Bars are pass rates; the band behind each is the 95%
-            interval. Where those overlap the data cannot order the models, and the ranking says
+            Every figure below comes out of{" "}
+            <strong className="font-medium text-foreground">agentscore</strong>&rsquo;s committed
+            run records — a real browser driving a real deployed application, one screenshot and
+            one state snapshot at a time. The bar is the 95% interval and the tick inside it is
+            the estimate. Where intervals overlap the data cannot order the models, and this says
             so rather than inventing a winner.
           </p>
           <Reveal>
