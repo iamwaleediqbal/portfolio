@@ -134,7 +134,7 @@ export default function Home() {
           {/* The three open ones are not three libraries, they are three seams
               of one problem. Said here so the cards below are read in order. */}
           <p className="mb-5 max-w-[68ch] text-[15px] leading-relaxed text-muted-foreground">
-            The three open source projects are one system taken apart: translating what a model
+            The three open source projects below are one system taken apart: translating what a model
             answered, judging what it did, and repeating it enough times to mean something.{" "}
             <Link href="/projects" className="font-medium text-foreground underline underline-offset-4">
               How they fit together

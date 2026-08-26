@@ -154,6 +154,42 @@ export const system = {
     "says nothing until it has been repeated.",
 };
 
+/**
+ * The execution cycle, as the diagram beside it explains it.
+ *
+ * Kept here rather than in the component so the drawing and the sentences that
+ * frame it are edited in the same place — a caption that drifts from the
+ * picture is worse than no caption.
+ */
+export const cycle = {
+  lead:
+    "One run, end to end. The harness asks the application to reset and records the world it " +
+    "reports back. The model then works one turn at a time — shown either a screenshot of the " +
+    "screen or the same mailbox serialised as text — and every action it chooses is carried out " +
+    "by a real browser against the live page. When it stops, the world is recorded again, and " +
+    "the two recordings are graded against each other.",
+  alt:
+    "One evaluation run. The environment is reset and the world it reports is recorded. The " +
+    "model then acts one turn at a time through a real browser against the live application. " +
+    "When it stops, the world is recorded again, and the two recordings are graded against each " +
+    "other into one of four verdicts. The route taken between them is never graded.",
+  caption:
+    "Both snapshots come from the application itself and travel past the loop untouched, meeting " +
+    "only at the grader. That is what makes a verdict recomputable a year later without paying " +
+    "for another model call — and why there is no way for the agent to influence what it is " +
+    "measured against.",
+  scrollHint: "Swipe the diagram sideways to follow the whole cycle.",
+  scopeLabel: "What this is a slice of",
+  scope:
+    "This is the innermost loop of a much larger system, and the only part small enough to " +
+    "publish. The platform I build full time wraps the same cycle in queued dispatch and " +
+    "concurrency control across a worker fleet, sandboxed browser and full-desktop environments " +
+    "booted from prebaked images on GKE and AWS, layered grading that includes graders running " +
+    "inside the target machine, human-recorded runs captured as ground truth, and a role-gated " +
+    "authoring, review and delivery lifecycle on top of all of it. None of that is public. The " +
+    "loop drawn here is.",
+};
+
 export interface Project {
   slug: string;
   name: string;
@@ -201,10 +237,10 @@ export const projects: Project[] = [
     repo: "https://github.com/iamwaleediqbal/agentscore",
     live: "https://agentscore-sigma.vercel.app",
     highlights: [
+      "48 recorded runs so far: 6 tasks across 5 models in both action spaces, for $0.65 of model spend in total. Three of the five models score strictly better reading the screen as text than as pixels; one is the other way round. A single blended score would have hidden that entirely, which is why the two are never averaged.",
       "Wilson intervals, so three out of three reports 100% with a lower bound near 44%, which is the correct amount of confidence to have in three attempts.",
       "Overlapping intervals share a rank and are marked tied. Ranking them anyway invents a difference the data cannot support.",
       "Deterministic checks run first. A judge is a model, so it brings its own variance on top of the variance you were trying to measure, and it is a last resort rather than a default.",
-      "Two snapshots in, a verdict out. Grading is a derivation, and one you cannot recompute is a number you have to trust.",
       "The browser runner carries polyact's coordinate rules in TypeScript, because a paid Gemini run proved it needs them: Gemini answered on a 0-1000 grid while the harness read most of its clicks as pixels, so the clicks landed where it had never aimed and the model was scored for the harness's arithmetic.",
       "Every turn is a real tool call. The two action spaces differ in what the model is shown and what it can name — not in how it replies, because a difference in transport would show up in the comparison as if it were a difference in skill.",
       "The console shows the system prompts exactly as sent, generated from the same constants the runner uses rather than transcribed — a benchmark that paraphrases what it told the model is not reproducible by anyone reading it.",
@@ -222,7 +258,10 @@ export const projects: Project[] = [
     why: "An environment that contains its own grader can only ever score itself. Separating them is what makes \"point the harness at a real application\" a question of writing an adapter rather than rewriting the grader.",
     stack: ["Next.js", "TypeScript", "Vercel"],
     repo: "https://github.com/iamwaleediqbal/clickmail",
-    live: "https://clickmail-sigma.vercel.app",
+    // /gym, not the bare origin. The origin is a landing page; the mailbox and
+    // the published contract — the thing the harness drives — live at /gym, and
+    // that is where every other surface sends people.
+    live: "https://clickmail-sigma.vercel.app/gym",
     highlights: [
       "Read and reset is the whole interface a harness gets: report the world, or discard it and report the world it starts in. There is deliberately no way to install a state from outside — a driver that could write the world could write the answer. No storage key, no DOM, no framework; the same surface a real application could be made to expose.",
       "It also reports which controls it is currently rendering, so a harness can refuse to spend a turn on an action space the interface no longer offers. That pair has drifted before, in both directions.",
@@ -258,7 +297,7 @@ export const career = {
 export const experience = [
   {
     company: "Turing",
-    role: "Senior Software Engineer",
+    role: "Python Developer, Agentic AI Evaluation Platform",
     period: "Sept 2023 - present",
     summary:
       "Evaluation infrastructure for computer-use agents, end to end: the environments, the runner, the grading, and the console people read the results in.",
@@ -275,10 +314,11 @@ export const experience = [
   },
   {
     company: "Softaims",
-    role: "Software Engineer",
+    role: "Senior Software Engineer",
     period: "Aug 2021 - July 2024",
     summary:
-      "Client product work across commerce, publishing and fintech — the years that taught me what shipping to a deadline actually costs.",
+      "Client product work across commerce, publishing and fintech — the years that taught me what shipping to a deadline actually costs. " +
+      "The final ten months ran concurrently with the Turing contract, with both employers' knowledge.",
     lines: [
       "Shipped and maintained client products in Ruby on Rails, React and Node, owning features from requirements through deployment and the support that followed.",
       "Built a Shopify app with Stripe billing and webhook handling, including the idempotency and replay handling that keeps a billing webhook from charging twice when the network retries it.",

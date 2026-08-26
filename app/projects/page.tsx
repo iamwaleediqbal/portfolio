@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Leaderboard } from "@/components/Leaderboard";
 import { ProjectCard } from "@/components/ProjectCard";
 import { Reveal } from "@/components/Reveal";
+import { RunCycle } from "@/components/RunCycle";
 import { SystemMap } from "@/components/SystemMap";
 import { projects } from "@/content/site";
 
@@ -37,6 +38,20 @@ export default function Projects() {
           </h2>
           <Reveal>
             <SystemMap />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* The three cards above say what the parts are. This says what happens
+          when they run, which is the question a reader actually arrives with. */}
+      <section className="border-b">
+        <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6">
+          <h2 className="mb-6 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.09em] text-muted-foreground">
+            <span aria-hidden className="size-2.5 rounded-[3px] bg-chart-2" />
+            What one run actually does
+          </h2>
+          <Reveal>
+            <RunCycle />
           </Reveal>
         </div>
       </section>

@@ -112,7 +112,7 @@ export default function Experience() {
           <div>
             <h2 className="text-lg font-semibold tracking-tight">The code, not the CV</h2>
             <p className="mt-1 max-w-[52ch] text-sm text-muted-foreground">
-              The platform above is not public. These four projects are the same ideas rebuilt in
+              The platform above is not public. The three open source projects are the same ideas rebuilt in
               the open, and every one of them runs.
             </p>
           </div>

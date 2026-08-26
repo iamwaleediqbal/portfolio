@@ -1,9 +1,9 @@
 {
   "source": "agentscore",
   "source_url": "https://agentscore-sigma.vercel.app/models",
-  "generated_at": "2026-08-25T19-33-09",
+  "generated_at": "2026-08-26T09-39-36",
   "driver": "playwright/chromium",
-  "runs": 20,
+  "runs": 48,
   "tasks": 6,
   "models": [
     {
@@ -14,6 +14,48 @@
       "scored": 6,
       "unscored": 0,
       "cost": 0.074856,
+      "pass_rate": 1,
+      "ci_low": 0.6097,
+      "ci_high": 1,
+      "rank": 1,
+      "tied": true
+    },
+    {
+      "model": "openai/gpt-5.6-luna",
+      "space": "computer",
+      "tasks": 6,
+      "passes": 6,
+      "scored": 6,
+      "unscored": 0,
+      "cost": 0.021601,
+      "pass_rate": 1,
+      "ci_low": 0.6097,
+      "ci_high": 1,
+      "rank": 1,
+      "tied": true
+    },
+    {
+      "model": "anthropic/claude-sonnet-5",
+      "space": "tool",
+      "tasks": 2,
+      "passes": 2,
+      "scored": 2,
+      "unscored": 0,
+      "cost": 0.085642,
+      "pass_rate": 1,
+      "ci_low": 0.3424,
+      "ci_high": 1,
+      "rank": 1,
+      "tied": true
+    },
+    {
+      "model": "meta/muse-glimmer-30b",
+      "space": "tool",
+      "tasks": 6,
+      "passes": 6,
+      "scored": 6,
+      "unscored": 0,
+      "cost": 0.023707,
       "pass_rate": 1,
       "ci_low": 0.6097,
       "ci_high": 1,
@@ -35,6 +77,20 @@
       "tied": true
     },
     {
+      "model": "openai/gpt-5.6-luna",
+      "space": "tool",
+      "tasks": 6,
+      "passes": 5,
+      "scored": 6,
+      "unscored": 0,
+      "cost": 0.020992,
+      "pass_rate": 0.8333,
+      "ci_low": 0.4365,
+      "ci_high": 0.9699,
+      "rank": 1,
+      "tied": true
+    },
+    {
       "model": "google/gemini-3.7-flash",
       "space": "computer",
       "tasks": 6,
@@ -49,6 +105,20 @@
       "tied": true
     },
     {
+      "model": "meta/muse-glimmer-30b",
+      "space": "computer",
+      "tasks": 6,
+      "passes": 3,
+      "scored": 6,
+      "unscored": 0,
+      "cost": 0.109435,
+      "pass_rate": 0.5,
+      "ci_low": 0.1876,
+      "ci_high": 0.8124,
+      "rank": 1,
+      "tied": true
+    },
+    {
       "model": "dots-studio/dots-3-note-preview:free",
       "space": "computer",
       "tasks": 2,
@@ -56,6 +126,20 @@
       "scored": 2,
       "unscored": 0,
       "cost": 0,
+      "pass_rate": 0,
+      "ci_low": 0,
+      "ci_high": 0.6576,
+      "rank": 1,
+      "tied": true
+    },
+    {
+      "model": "anthropic/claude-sonnet-5",
+      "space": "computer",
+      "tasks": 2,
+      "passes": 0,
+      "scored": 2,
+      "unscored": 0,
+      "cost": 0.26284,
       "pass_rate": 0,
       "ci_low": 0,
       "ci_high": 0.6576,
