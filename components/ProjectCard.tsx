@@ -11,7 +11,14 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
   const tone = TONE[index % TONE.length];
 
   return (
-    <Card className="relative gap-0 overflow-hidden pt-0 transition-shadow hover:shadow-lg">
+    // Anchored on the slug so a single project has its own address. LinkedIn,
+    // Upwork and a message to a recruiter all want to point at one project, and
+    // /projects on its own makes the reader hunt for it. scroll-mt clears the
+    // sticky nav so the card is not parked underneath it on arrival.
+    <Card
+      id={project.slug}
+      className="relative scroll-mt-24 gap-0 overflow-hidden pt-0 transition-shadow hover:shadow-lg"
+    >
       <span
         aria-hidden
         className="absolute inset-x-0 top-0 h-[3px]"
