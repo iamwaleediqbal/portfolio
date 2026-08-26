@@ -28,7 +28,7 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {project.mirrors && (
+        {project.part && (
           <p
             className="rounded-r-md border-l-2 py-2 pl-3 pr-3 text-sm text-muted-foreground"
             style={{
@@ -36,7 +36,7 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
               background: `color-mix(in srgb, var(--${tone}) 6%, transparent)`,
             }}
           >
-            {project.mirrors}
+            {project.part}
           </p>
         )}
 

@@ -37,7 +37,7 @@ export const profile = {
     "That current work is an evaluation platform for computer-use agents: a Python and Postgres backend with a Next.js front end, running batches of model attempts against browser and desktop environments, grading them against a known-good end state, and packaging the results for delivery to the client.",
     "It drives OpenAI, Anthropic, Gemini and self-hosted models through one code path. That is harder than it sounds: every provider returns a different action format, in a different coordinate space, with token accounting that disagrees about what it is counting. All of it has to mean the same thing before anything downstream can use it.",
     "The earlier years are where the engineering habits came from — client products with real deadlines, a Shopify app with Stripe billing and webhook handling, and a full rebuild of a live product onto Next.js and Django without dropping its users.",
-    "That platform is not public. So the projects below are the same ideas rebuilt in the open, small enough to read in one sitting.",
+    "Alongside that I publish my own agent evaluation stack in the open: a provider layer, a harness that drives and grades a run, and the application it drives. Three deployed repositories, and every number on this site is backed by a recorded run you can open.",
   ],
   // Facts about the work, not about the website. Anything that only makes sense
   // to whoever built this page does not belong on it.
@@ -179,23 +179,20 @@ export const cycle = {
     "for another model call — and why there is no way for the agent to influence what it is " +
     "measured against.",
   scrollHint: "Swipe the diagram sideways to follow the whole cycle.",
-  scopeLabel: "What this is a slice of",
+  scopeLabel: "Scope",
+  // One line saying what the picture is. It used to explain what larger system
+  // the loop was a slice of, which was both an excuse and somebody else's
+  // architecture to be publishing.
   scope:
-    "This is the innermost loop of a much larger system, and the only part small enough to " +
-    "publish. The platform I build full time wraps the same cycle in queued dispatch and " +
-    "concurrency control across a worker fleet, sandboxed browser and full-desktop environments " +
-    "booted from prebaked images on GKE and AWS, layered grading that includes graders running " +
-    "inside the target machine, human-recorded runs captured as ground truth, and a role-gated " +
-    "authoring, review and delivery lifecycle on top of all of it. None of that is public. The " +
-    "loop drawn here is.",
+    "One evaluation run, start to finish. Scheduling, isolation and review all sit outside this loop.",
 };
 
 export interface Project {
   slug: string;
   name: string;
   tagline: string;
-  /** What this is a reduced, public version of. */
-  mirrors?: string;
+  /** The part this piece plays in the stack, for a reader meeting it cold. */
+  part?: string;
   what: string;
   why: string;
   stack: string[];
@@ -211,8 +208,7 @@ export const projects: Project[] = [
     name: "polyact",
     tagline: "One action schema for computer-use agents",
     status: "open source",
-    mirrors:
-      "The provider-agnostic layer inside the evaluation platform I work on, extracted and rewritten in the open.",
+    part: "The foundation. Everything above it can stay ignorant of which provider answered, because this is where four formats become one.",
     what: "A Python library that turns four incompatible provider response formats into one record, in real screen pixels, with token accounting that survives a provider change.",
     why: "The largest source of quiet, score-corrupting bugs in agent evaluation is not prompting or grading. It is that providers disagree about what their own output means, and the disagreements do not raise. They degrade.",
     stack: ["Python", "async", "pytest"],
@@ -229,8 +225,7 @@ export const projects: Project[] = [
     name: "agentscore",
     tagline: "The harness: drive it, grade it, and repeat it enough times to mean something",
     status: "open source",
-    mirrors:
-      "The batch runner and scoring pipeline, minus the queueing, the reviewer workflow and the delivery packaging.",
+    part: "The harness. The only piece here that talks to a model, and the one that decides what a run was worth.",
     what: "Opens an environment in a real browser, fetches the world before the task and after it, and grades one snapshot against the other — never the route taken. Both snapshots are kept, so a change to the grading logic is retested against every past run without a single model call. A separate suite repeats short tasks across free models and reports intervals rather than numbers.",
     why: "One run is not a result. A leaderboard built from single runs reorders itself nightly for no reason anyone can explain.",
     stack: ["Next.js", "TypeScript", "Playwright", "Python", "OpenRouter"],
@@ -252,8 +247,7 @@ export const projects: Project[] = [
     name: "clickmail",
     tagline: "The application under test, and nothing else",
     status: "live demo",
-    mirrors:
-      "One of the environments the production platform grades. There they are cloned web apps and full desktop VMs booted from prebaked volumes; here it is a mail client small enough to read.",
+    part: "The target. It knows nothing about models, tasks or grading, and that ignorance is the feature — it is what keeps the harness honest.",
     what: "A public mail client — fifty-two messages, seven folders, search, labels, spam — that exists to be operated by something that is not a person. It publishes a small read-and-reset contract and knows nothing about tasks, grading or models.",
     why: "An environment that contains its own grader can only ever score itself. Separating them is what makes \"point the harness at a real application\" a question of writing an adapter rather than rewriting the grader.",
     stack: ["Next.js", "TypeScript", "Vercel"],
@@ -274,7 +268,7 @@ export const projects: Project[] = [
     name: "Anchorly",
     tagline: "A grounded AI store assistant for Shopify merchants",
     status: "product",
-    mirrors: "Not a reduction — this one ships to merchants.",
+    part: "The outlier: a commercial product with paying merchants behind it, rather than infrastructure.",
     what: "Every factual answer comes from a live database lookup, never from model memory. Prices, stock, policies and order status are quoted from the merchant's own synced data.",
     why: "Competing chatbot apps get churned over for inventing prices and fabricating policies. The whole architecture exists to make that class of failure structurally impossible rather than merely unlikely.",
     stack: ["Remix", "TypeScript", "Prisma", "Shopify"],
@@ -297,8 +291,19 @@ export const career = {
 export const experience = [
   {
     company: "Turing",
-    role: "Python Developer, Agentic AI Evaluation Platform",
+    role: "Software Engineer, Agentic AI Evaluation Platform",
     period: "Sept 2023 - present",
+    /**
+     * One contract, three scopes. Listed because a single title spanning three
+     * years hides the progression, and the progression is the point: the work
+     * moved from producing training data, to building the environments, to
+     * building the platform that runs and grades them.
+     */
+    roles: [
+      { title: "Software Engineer, Agentic AI Evaluation Platform", period: "Sep 2025 - present" },
+      { title: "Software Engineer, Agentic RL Environments", period: "Jul 2024 - Aug 2025" },
+      { title: "Software Engineer, LLM Code Generation and Computer Use", period: "Sep 2023 - Jun 2024" },
+    ],
     summary:
       "Evaluation infrastructure for computer-use agents, end to end: the environments, the runner, the grading, and the console people read the results in.",
     lines: [
@@ -316,6 +321,11 @@ export const experience = [
     company: "Softaims",
     role: "Senior Software Engineer",
     period: "Aug 2021 - July 2024",
+    roles: [
+      { title: "Senior Software Engineer", period: "Aug 2023 - Jul 2024" },
+      { title: "Software Engineer", period: "Aug 2022 - Aug 2023" },
+      { title: "Associate Software Engineer", period: "Aug 2021 - Aug 2022" },
+    ],
     summary:
       "Client product work across commerce, publishing and fintech — the years that taught me what shipping to a deadline actually costs. " +
       "The final ten months ran concurrently with the Turing contract, with both employers' knowledge.",

@@ -64,6 +64,28 @@ export default function Experience() {
                         <p className="max-w-[68ch] text-[15px] leading-relaxed text-muted-foreground">
                           {job.summary}
                         </p>
+
+                        {/* The roles inside the contract, newest first. A single
+                            title across three years reads as one job; the list is
+                            what shows the scope changing. */}
+                        <ol className="space-y-1 pt-1">
+                          {job.roles.map((step) => (
+                            <li
+                              key={step.title}
+                              className="flex flex-wrap items-baseline gap-x-2 text-[13px] leading-relaxed"
+                            >
+                              <span
+                                aria-hidden
+                                className="size-1.5 shrink-0 rounded-full"
+                                style={{ background: `color-mix(in srgb, var(--${tone}) 70%, transparent)` }}
+                              />
+                              <span className="font-medium text-foreground/90">{step.title}</span>
+                              <span className="font-mono text-[11px] text-muted-foreground">
+                                {step.period}
+                              </span>
+                            </li>
+                          ))}
+                        </ol>
                       </div>
 
                       <Separator />

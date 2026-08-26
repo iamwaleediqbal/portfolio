@@ -22,10 +22,11 @@ export default function Projects() {
             Built in the open, small enough to read
           </h1>
           <p className="mt-4 max-w-[66ch] text-muted-foreground">
-            I build agent evaluation infrastructure full time. That platform is not public, so
-            these are light versions of the same systems, rebuilt where you can read them end
-            to end. Each names what it is a reduction of. The tests are written against the
-            mistakes rather than the happy path, which is the part worth looking at.
+            Three repositories that make up a working evaluation stack — the provider layer,
+            the harness that drives and grades a run, and the application it drives — plus a
+            commercial product that ships to merchants. Each one is deployed, tested and open,
+            and the tests are written against the mistakes rather than the happy path, which is
+            the part worth looking at.
           </p>
         </div>
       </header>
