@@ -53,10 +53,7 @@ export default function Experience() {
                     <CardContent className="space-y-5">
                       <div className="space-y-2">
                         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                          <h2 className="text-lg font-semibold tracking-tight">
-                            {job.role}
-                            <span className="text-muted-foreground">, {job.company}</span>
-                          </h2>
+                          <h2 className="text-lg font-semibold tracking-tight">{job.company}</h2>
                           <Badge variant="secondary" className="font-mono text-[11px] font-medium">
                             {job.period}
                           </Badge>
@@ -65,46 +62,43 @@ export default function Experience() {
                           {job.summary}
                         </p>
 
-                        {/* The roles inside the contract, newest first. A single
-                            title across three years reads as one job; the list is
-                            what shows the scope changing. */}
-                        <ol className="space-y-1 pt-1">
-                          {job.roles.map((step) => (
-                            <li
-                              key={step.title}
-                              className="flex flex-wrap items-baseline gap-x-2 text-[13px] leading-relaxed"
-                            >
-                              <span
-                                aria-hidden
-                                className="size-1.5 shrink-0 rounded-full"
-                                style={{ background: `color-mix(in srgb, var(--${tone}) 70%, transparent)` }}
-                              />
-                              <span className="font-medium text-foreground/90">{step.title}</span>
-                              <span className="font-mono text-[11px] text-muted-foreground">
-                                {step.period}
-                              </span>
-                            </li>
-                          ))}
-                        </ol>
                       </div>
 
                       <Separator />
 
-                      <ul className="space-y-3">
-                        {job.lines.map((line) => (
-                          <li
-                            key={line.slice(0, 28)}
-                            className="flex gap-3 text-[15px] leading-relaxed text-muted-foreground"
-                          >
-                            <span
-                              aria-hidden
-                              className="mt-[0.55rem] size-1.5 shrink-0 rounded-full"
-                              style={{ background: `var(--${tone})` }}
-                            />
-                            <span className="text-foreground/85">{line}</span>
-                          </li>
+                      {/* The positions inside the employer, newest first, each with
+                          its own work. A single title across years reads as one job;
+                          the sections are what show the scope changing. */}
+                      <div className="space-y-7">
+                        {job.roles.map((step) => (
+                          <div key={step.title} className="space-y-3">
+                            <div className="flex flex-wrap items-baseline gap-x-2 leading-relaxed">
+                              <span
+                                aria-hidden
+                                className="size-1.5 shrink-0 self-center rounded-full"
+                                style={{ background: `color-mix(in srgb, var(--${tone}) 70%, transparent)` }}
+                              />
+                              <h3 className="text-[15px] font-semibold text-foreground/90">{step.title}</h3>
+                              <span className="font-mono text-[11px] text-muted-foreground">{step.period}</span>
+                            </div>
+                            <ul className="space-y-3">
+                              {step.lines.map((line) => (
+                                <li
+                                  key={line.slice(0, 28)}
+                                  className="flex gap-3 text-[15px] leading-relaxed text-muted-foreground"
+                                >
+                                  <span
+                                    aria-hidden
+                                    className="mt-[0.55rem] size-1.5 shrink-0 rounded-full"
+                                    style={{ background: `var(--${tone})` }}
+                                  />
+                                  <span className="text-foreground/85">{line}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         ))}
-                      </ul>
+                      </div>
 
                       <div className="flex flex-wrap gap-1.5 pt-1">
                         {job.stack.map((item) => (
@@ -134,8 +128,8 @@ export default function Experience() {
           <div>
             <h2 className="text-lg font-semibold tracking-tight">The code, not the CV</h2>
             <p className="mt-1 max-w-[52ch] text-sm text-muted-foreground">
-              The platform above is not public. The three open source projects are the same ideas rebuilt in
-              the open, and every one of them runs.
+              The platform above is not public. The open source projects are, and every one of
+              them runs.
             </p>
           </div>
           <div className="flex gap-2">

@@ -22,11 +22,11 @@ export default function Projects() {
             Built in the open, small enough to read
           </h1>
           <p className="mt-4 max-w-[66ch] text-muted-foreground">
-            Three repositories that make up a working evaluation stack — the provider layer,
-            the harness that drives and grades a run, and the application it drives — plus a
-            commercial product that ships to merchants. Each one is deployed, tested and open,
-            and the tests are written against the mistakes rather than the happy path, which is
-            the part worth looking at.
+            Three open repositories that make up a working evaluation stack: the provider layer,
+            the harness that drives and grades a run, and the application it drives. Each one is
+            deployed and tested, and the tests are written against the mistakes rather than the
+            happy path, which is the part worth looking at. Plus Anchorly, a live AI shopping
+            assistant for Shopify stores.
           </p>
         </div>
       </header>

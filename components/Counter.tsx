@@ -65,7 +65,7 @@ export function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
 
   return (
     <span ref={ref}>
-      {value}
+      {value.toLocaleString("en-US")}
       {suffix}
     </span>
   );
