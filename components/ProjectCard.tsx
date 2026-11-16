@@ -1,5 +1,6 @@
 import { ArrowUpRight, Github } from "lucide-react";
 
+import { BrowserFrame } from "@/components/BrowserFrame";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,16 +18,24 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
     // sticky nav so the card is not parked underneath it on arrival.
     <Card
       id={project.slug}
-      className="relative scroll-mt-24 gap-0 overflow-hidden pt-0 transition-shadow hover:shadow-lg"
+      className="group relative scroll-mt-24 gap-0 overflow-hidden rounded-[28px] pt-0 transition-shadow hover:shadow-[0_30px_80px_-50px_var(--cobalt)]"
     >
       <span
         aria-hidden
         className="absolute inset-x-0 top-0 h-[3px]"
         style={{ background: `linear-gradient(90deg, var(--${tone}), transparent)` }}
       />
+      {project.image && (project.live || project.repo) && (
+        <div
+          className="px-4 pt-6 sm:px-6"
+          style={{ background: `linear-gradient(180deg, color-mix(in srgb, var(--${tone}) 16%, transparent), transparent)` }}
+        >
+          <BrowserFrame src={project.image} alt={`${project.name}, running`} url={(project.live ?? project.repo)!} />
+        </div>
+      )}
       <CardHeader className="pt-6">
         <div className="flex flex-wrap items-center gap-2">
-          <CardTitle className="text-xl tracking-tight">{project.name}</CardTitle>
+          <CardTitle className="font-display text-2xl font-extrabold tracking-tight">{project.name}</CardTitle>
           <Badge variant="secondary" className="font-normal capitalize">
             {project.status}
           </Badge>

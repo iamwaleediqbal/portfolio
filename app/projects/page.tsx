@@ -19,9 +19,9 @@ export default function Projects() {
   return (
     <>
       <header className="border-b">
-        <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6">
+        <div className="mx-auto max-w-6xl px-5 py-12 xl:pr-[17.25rem]">
           <p className="text-xs font-semibold uppercase tracking-[0.09em] text-primary">Projects</p>
-          <h1 className="mt-2 max-w-[20ch] text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h1 className="mt-2 max-w-[20ch] text-4xl font-extrabold tracking-tight sm:text-5xl">
             One main project, and two products people use
           </h1>
           <p className="mt-4 max-w-[66ch] text-muted-foreground">
@@ -35,7 +35,7 @@ export default function Projects() {
       </header>
 
       <section className="border-b">
-        <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6">
+        <div className="mx-auto max-w-6xl px-5 py-12 xl:pr-[17.25rem]">
           <h2 className="mb-6 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.09em] text-muted-foreground">
             <span aria-hidden className="size-2.5 rounded-[3px] bg-chart-1" />
             How agentscore and its companions fit together
@@ -49,7 +49,7 @@ export default function Projects() {
       {/* The three cards above say what the parts are. This says what happens
           when they run, which is the question a reader actually arrives with. */}
       <section className="border-b">
-        <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6">
+        <div className="mx-auto max-w-6xl px-5 py-12 xl:pr-[17.25rem]">
           <h2 className="mb-6 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.09em] text-muted-foreground">
             <span aria-hidden className="size-2.5 rounded-[3px] bg-chart-2" />
             What one run actually does
@@ -60,7 +60,7 @@ export default function Projects() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl space-y-4 px-5 py-12 sm:px-6">
+      <section className="mx-auto max-w-6xl space-y-4 px-5 py-12 xl:pr-[17.25rem]">
         {harness.map((project, index) => (
           <Reveal key={project.slug} delay={index * 55}>
             <ProjectCard project={project} index={index} />
@@ -69,7 +69,7 @@ export default function Projects() {
       </section>
 
       <section className="border-t">
-        <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6">
+        <div className="mx-auto max-w-6xl px-5 py-12 xl:pr-[17.25rem]">
           <h2 className="mb-3 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.09em] text-muted-foreground">
             <span aria-hidden className="size-2.5 rounded-[3px] bg-chart-4" />
             Measured, not claimed
@@ -91,7 +91,7 @@ export default function Projects() {
       {/* Live products, not infrastructure: things people use, with their own
           sites rather than repositories. */}
       <section className="border-t">
-        <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6">
+        <div className="mx-auto max-w-6xl px-5 py-12 xl:pr-[17.25rem]">
           <h2 className="mb-3 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.09em] text-muted-foreground">
             <span aria-hidden className="size-2.5 rounded-[3px] bg-chart-5" />
             Products

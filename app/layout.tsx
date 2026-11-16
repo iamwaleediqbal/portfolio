@@ -1,5 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 
+import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
 import { ThemeProvider } from "@/components/theme-provider";
 import { profile } from "@/content/site";
@@ -20,6 +22,24 @@ import "./globals.css";
  */
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://waleediqbal.vercel.app";
 
+/*
+ * Three faces, three jobs. Bricolage Grotesque carries the voice: headings and
+ * big numbers, where a little eccentricity is the point. Geist carries the
+ * reading. Geist Mono carries anything a machine produced: labels, data, code.
+ * All self-hosted by next/font, so there is no layout shift and no request to
+ * a font CDN on first paint.
+ */
+const display = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-bricolage", display: "swap" });
+const sans = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
+const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0b0b10" },
+    { media: "(prefers-color-scheme: light)", color: "#f6f2ea" },
+  ],
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: { default: `${profile.name} — ${profile.role}`, template: `%s — ${profile.name}` },
@@ -39,7 +59,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${display.variable} ${sans.variable} ${mono.variable}`}>
       <body className="antialiased">
         <ThemeProvider>
           <a
@@ -50,24 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </a>
           <Nav name={profile.name} />
           <main id="main">{children}</main>
-          <footer className="border-t">
-            <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3 px-5 py-6 text-sm text-muted-foreground sm:px-6">
-              <span>
-                &copy; {new Date().getFullYear()} {profile.name}
-              </span>
-              <span className="flex gap-4">
-                <a href={profile.github} className="hover:text-foreground">
-                  GitHub
-                </a>
-                <a href={profile.linkedin} className="hover:text-foreground">
-                  LinkedIn
-                </a>
-                <a href="/contact" className="hover:text-foreground">
-                  Contact
-                </a>
-              </span>
-            </div>
-          </footer>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

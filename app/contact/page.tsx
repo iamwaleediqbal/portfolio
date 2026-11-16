@@ -15,9 +15,9 @@ export default function Contact() {
   return (
     <>
       <header className="border-b">
-        <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6">
+        <div className="mx-auto max-w-6xl px-5 py-12 xl:pr-[17.25rem]">
           <p className="text-xs font-semibold uppercase tracking-[0.09em] text-primary">Contact</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h1 className="mt-2 text-4xl font-extrabold tracking-tight sm:text-5xl">
             Let&apos;s talk
           </h1>
           <p className="mt-3 max-w-[60ch] text-[17px] leading-relaxed text-muted-foreground">
@@ -27,7 +27,7 @@ export default function Contact() {
         </div>
       </header>
 
-      <section className="mx-auto grid max-w-4xl gap-8 px-5 py-12 sm:px-6 lg:grid-cols-[minmax(0,1fr)_260px]">
+      <section className="mx-auto grid max-w-6xl gap-8 px-5 py-12 lg:grid-cols-[minmax(0,35rem)_260px]">
         <Card>
           <CardContent>
             <ContactForm

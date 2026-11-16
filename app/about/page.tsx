@@ -15,15 +15,15 @@ export default function About() {
   return (
     <>
       <header className="border-b">
-        <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6">
+        <div className="mx-auto max-w-6xl px-5 py-12 xl:pr-[17.25rem]">
           <p className="text-xs font-semibold uppercase tracking-[0.09em] text-primary">About</p>
-          <h1 className="mt-2 max-w-[22ch] text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h1 className="mt-2 max-w-[22ch] text-4xl font-extrabold tracking-tight sm:text-5xl">
             {profile.headline}
           </h1>
         </div>
       </header>
 
-      <section className="mx-auto grid max-w-4xl gap-10 px-5 py-12 sm:px-6 lg:grid-cols-[minmax(0,1fr)_260px]">
+      <section className="mx-auto grid max-w-6xl gap-10 px-5 py-12 lg:grid-cols-[minmax(0,35rem)_260px]">
         <div className="space-y-4">
           {profile.intro.map((paragraph, index) => (
             <Reveal key={paragraph.slice(0, 24)} delay={index * 55}>
@@ -56,7 +56,7 @@ export default function About() {
       </section>
 
       <section className="border-t">
-        <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6">
+        <div className="mx-auto max-w-6xl px-5 py-12 xl:pr-[17.25rem]">
           <h2 className="mb-6 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.09em] text-muted-foreground">
             <span aria-hidden className="size-2.5 rounded-[3px] bg-chart-3" />
             Stack

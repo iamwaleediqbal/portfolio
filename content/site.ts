@@ -193,6 +193,8 @@ export interface Project {
   stack: string[];
   repo?: string;
   live?: string;
+  /** A real screenshot of the running thing, from public/shots. */
+  image?: string;
   status: "open source" | "live demo" | "product";
   highlights: string[];
 }
@@ -210,6 +212,7 @@ export const projects: Project[] = [
     stack: ["Next.js", "TypeScript", "Playwright", "Python", "OpenRouter"],
     repo: "https://github.com/iamwaleediqbal/agentscore",
     live: "https://agentscore-sigma.vercel.app",
+    image: "/shots/agentscore.webp",
     highlights: [
       "48 recorded runs so far: 6 tasks across 5 models in both action spaces, for $0.65 of model spend in total. Three of the five models score strictly better reading the screen as text than as pixels; one is the other way round. A single blended score would have hidden that entirely, which is why the two are never averaged.",
       "Regrading is one command. Every run keeps the before and after snapshot, so after a change to the grading logic, npm run regrade scores all past runs again with no model call, no browser and no environment, and lists exactly which verdicts moved. Its tests reproduce all 48 published verdicts from the snapshots alone.",
@@ -255,6 +258,7 @@ export const projects: Project[] = [
     // the published contract — the thing the harness drives — live at /gym, and
     // that is where every other surface sends people.
     live: "https://clickmail-sigma.vercel.app/gym",
+    image: "/shots/clickmail.webp",
     highlights: [
       "Read and reset is the whole interface a harness gets: report the world, or discard it and report the world it starts in. There is deliberately no way to install a state from outside — a driver that could write the world could write the answer. No storage key, no DOM, no framework; the same surface a real application could be made to expose.",
       "It also reports which controls it is currently rendering, so a harness can refuse to spend a turn on an action space the interface no longer offers. That pair has drifted before, in both directions.",
@@ -273,6 +277,7 @@ export const projects: Project[] = [
     why: "Competing chatbot apps get churned over for inventing prices and fabricating policies. The whole architecture exists to make that class of failure structurally impossible rather than merely unlikely.",
     stack: ["Node.js", "TypeScript", "Shopify Remix", "Prisma", "PostgreSQL", "pgvector", "BullMQ", "OpenRouter"],
     live: "https://anchorlychat.com",
+    image: "/shots/anchorly.webp",
     highlights: [
       "Tested on one store of 280 products from different vendors and niches, it found the right product 51 out of 51 times and never invented a product or a price.",
       "Below a relevance floor it declines and takes the shopper's email instead of guessing. It answered honestly all 8 times a store did not sell what the shopper asked for.",
@@ -293,6 +298,7 @@ export const projects: Project[] = [
     why: "A general chatbot will happily invent a hadith or misquote an ayah, and in this subject a made up source is the worst possible failure. The design makes that failure something the system catches, not something it hopes to avoid.",
     stack: ["Python", "FastAPI", "LangGraph", "PostgreSQL", "pgvector", "Expo", "React Native", "Anthropic", "OpenRouter"],
     live: "https://myqurancompanion.com",
+    image: "/shots/quran.webp",
     highlights: [
       "Any reply that cites, quotes or numbers something outside the retrieved sources is rejected and retried once, then replaced by a fixed message that shows the sources.",
       "A hadith reaches a reply only if it passes every authenticity gate: graded sahih or hasan, full text, a connected chain, and Arabic checked against an independent copy. 29,360 of the 69,408 stored hadith pass.",

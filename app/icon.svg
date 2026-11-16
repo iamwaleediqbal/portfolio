@@ -1,10 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Waleed Iqbal">
   <!--
-    Initials on a dark tile. Explicit fills, not currentColor: a favicon is
-    rendered outside the page, so it cannot inherit the theme.
+    The nav monogram: initials on a cobalt tile with one tangerine dot.
+    Explicit fills, not currentColor: a favicon is rendered outside the page,
+    so it cannot inherit the theme.
   -->
-  <rect width="32" height="32" rx="7" fill="#0b1220"/>
-  <text x="16" y="21.5" text-anchor="middle"
+  <rect width="32" height="32" rx="8" fill="#3b5bff"/>
+  <text x="15" y="21.5" text-anchor="middle"
         font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
-        font-size="15" font-weight="600" fill="#e2e8f0" letter-spacing="-0.5">WI</text>
+        font-size="14" font-weight="800" fill="#ffffff" letter-spacing="-0.5">WI</text>
+  <circle cx="26.5" cy="5.5" r="4" fill="#ff5b2e" stroke="#0b0b10" stroke-width="1.5"/>
 </svg>

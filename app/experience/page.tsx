@@ -19,11 +19,11 @@ export default function Experience() {
   return (
     <>
       <header className="border-b">
-        <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6">
+        <div className="mx-auto max-w-6xl px-5 py-12 xl:pr-[17.25rem]">
           <p className="text-xs font-semibold uppercase tracking-[0.09em] text-primary">
             Experience
           </p>
-          <h1 className="mt-2 max-w-[26ch] text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h1 className="mt-2 max-w-[26ch] text-4xl font-extrabold tracking-tight sm:text-5xl">
             {career.headline}
           </h1>
           <p className="mt-4 max-w-[68ch] text-[17px] leading-relaxed text-muted-foreground">
@@ -32,7 +32,7 @@ export default function Experience() {
         </div>
       </header>
 
-      <section className="mx-auto max-w-4xl px-5 py-12 sm:px-6">
+      <section className="mx-auto max-w-6xl px-5 py-12 xl:pr-[17.25rem]">
         <ol className="relative space-y-5 border-l pl-6 sm:pl-8">
           {experience.map((job, index) => {
             const tone = TONE[index % TONE.length];
@@ -124,7 +124,7 @@ export default function Experience() {
       </section>
 
       <section className="border-t">
-        <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-5 py-10 sm:px-6">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-10 xl:pr-[17.25rem]">
           <div>
             <h2 className="text-lg font-semibold tracking-tight">The code, not the CV</h2>
             <p className="mt-1 max-w-[52ch] text-sm text-muted-foreground">

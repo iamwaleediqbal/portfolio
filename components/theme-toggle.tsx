@@ -29,7 +29,7 @@ export function ThemeToggle() {
     <div
       role="radiogroup"
       aria-label="Colour theme"
-      className="inline-flex items-center gap-0.5 rounded-lg border bg-card p-0.5"
+      className="inline-flex items-center gap-0.5 rounded-full border bg-card/60 p-0.5"
     >
       {OPTIONS.map(({ value, label, Icon }) => (
         <button
@@ -40,7 +40,7 @@ export function ThemeToggle() {
           title={label}
           onClick={() => setTheme(value)}
           className={cn(
-            "inline-flex size-7 items-center justify-center rounded-md transition-colors",
+            "inline-flex size-7 items-center justify-center rounded-full transition-colors",
             theme === value
               ? "bg-secondary text-foreground"
               : "text-muted-foreground hover:text-foreground",
