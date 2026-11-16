@@ -1,82 +1,51 @@
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { system } from "@/content/site";
+import { cn } from "@/lib/utils";
 
-const TONE = ["chart-1", "chart-2", "chart-3"] as const;
+const TONE = ["var(--pink)", "var(--mint)", "var(--cobalt)"] as const;
 
 /**
- * The three open projects as one pipeline.
- *
- * Read as separate cards they look like three unrelated libraries. They are
- * three seams of one problem, and the order matters — so the layout says so:
- * numbered, in sequence, with what each one prevents sitting under what it does.
- *
- * The connector is an arrow between steps on a wide screen and a vertical rule
- * on a narrow one, because a row of three that reflows into a column loses the
- * one thing it was drawn to show.
+ * agentscore and its two companions as one pipeline, with the page you are on
+ * marked. Three cards in order, because the order is the point: the model
+ * answers, something happens, somebody decides whether it worked.
  */
-export function SystemMap() {
+export function SystemMap({ current }: { current?: string }) {
   return (
-    <div className="space-y-4">
-      <p className="max-w-[68ch] text-[17px] leading-relaxed">{system.lead}</p>
-
-      <ol className="grid gap-3 lg:grid-cols-3">
-        {system.layers.map((layer, index) => (
-          <li key={layer.slug} className="relative flex">
-            <Card className="relative h-full w-full gap-0 overflow-hidden pt-0">
-              <span
-                aria-hidden
-                className="absolute inset-x-0 top-0 h-[3px]"
-                style={{
-                  background: `linear-gradient(90deg, var(--${TONE[index]}), transparent)`,
-                }}
-              />
-              <CardContent className="space-y-3 pt-5">
-                <div className="flex items-baseline gap-2">
-                  <span
-                    className="font-mono text-[11px] tabular"
-                    style={{ color: `var(--${TONE[index]})` }}
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    {layer.step}
-                  </span>
-                </div>
-
-                <div>
-                  <h3 className="font-mono text-sm font-semibold tracking-tight">{layer.slug}</h3>
-                  <p className="mt-1 text-sm font-medium">{layer.role}</p>
-                </div>
-
-                <p className="text-sm leading-relaxed text-muted-foreground">{layer.owns}</p>
-
-                <div className="rounded-md border-l-2 bg-muted/40 px-3 py-2">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    What it prevents
-                  </p>
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                    {layer.breaks}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Between the cards, never after the last one. */}
+    <ol className="grid gap-3 md:grid-cols-3">
+      {system.layers.map((layer, index) => {
+        const here = layer.slug === current;
+        return (
+          <li key={layer.slug} className="relative">
+            <Link
+              href={`/projects/${layer.slug}`}
+              aria-current={here ? "page" : undefined}
+              className={cn(
+                "group flex h-full flex-col gap-2 rounded-[22px] border bg-card p-5 transition hover:-translate-y-0.5",
+                here && "ring-2 ring-offset-2 ring-offset-background",
+              )}
+              style={here ? ({ "--tw-ring-color": TONE[index] } as React.CSSProperties) : undefined}
+            >
+              <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                <span className="size-2 rounded-full" style={{ background: TONE[index] }} />
+                {String(index + 1).padStart(2, "0")} {layer.step}
+              </span>
+              <span className="font-mono text-lg font-semibold">{layer.slug}</span>
+              <span className="text-sm leading-relaxed text-muted-foreground">{layer.role}</span>
+              <span className="mt-auto pt-1 text-xs font-medium text-link">
+                {here ? "You are here" : "Open the case study"}
+              </span>
+            </Link>
             {index < system.layers.length - 1 && (
               <ArrowRight
                 aria-hidden
-                className="absolute -right-3 top-1/2 hidden size-4 -translate-y-1/2 text-muted-foreground lg:block"
+                className="absolute -right-[11px] top-1/2 z-10 hidden size-4 -translate-y-1/2 rounded-full bg-background text-muted-foreground md:block"
               />
             )}
           </li>
-        ))}
-      </ol>
-
-      <p className="max-w-[68ch] text-sm leading-relaxed text-muted-foreground">
-        {system.honesty}
-      </p>
-    </div>
+        );
+      })}
+    </ol>
   );
 }

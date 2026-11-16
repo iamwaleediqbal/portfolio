@@ -1,105 +1,131 @@
+import { ArrowRight, Download } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+import { LocalTime } from "@/components/LocalTime";
+import { PageHeader } from "@/components/PageHeader";
 import { Reveal } from "@/components/Reveal";
+import { TechIcon } from "@/components/TechIcon";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { profile, skills } from "@/content/site";
+import type { IconName } from "@/lib/tech-icons";
 
 export const metadata: Metadata = { title: "About", description: profile.headline };
 
-const TONE = ["chart-1", "chart-2", "chart-3", "chart-4", "chart-5", "chart-6"] as const;
+/** A short heading for each paragraph of the story, so it can be skimmed. */
+const CHAPTERS = ["Where it started", "What I do now", "The hard part", "Where the habits came from", "On the side"];
+
+const ICON: Partial<Record<string, IconName>> = {
+  Python: "python",
+  FastAPI: "fastapi",
+  Celery: "celery",
+  Redis: "redis",
+  PostgreSQL: "postgresql",
+  "Node.js": "nodejs",
+  "Ruby on Rails": "rails",
+  TypeScript: "typescript",
+  "Next.js": "nextjs",
+  React: "react",
+  Tailwind: "tailwind",
+  "Shopify apps": "shopify",
+  OpenAI: "openai",
+  Anthropic: "anthropic",
+  Gemini: "gemini",
+  "GCP and GKE": "gcp",
+  AWS: "aws",
+  Docker: "docker",
+  Kubernetes: "kubernetes",
+  Vercel: "vercel",
+  "GitHub Actions": "githubactions",
+  Prisma: "prisma",
+};
+
+const GROUP_TONE = ["var(--cobalt)", "var(--tangerine)", "var(--mint)", "var(--sun)", "var(--lilac)"];
 
 export default function About() {
   return (
     <>
-      <header className="border-b">
-        <div className="mx-auto max-w-6xl px-5 py-12 xl:pr-[17.25rem]">
-          <p className="text-xs font-semibold uppercase tracking-[0.09em] text-primary">About</p>
-          <h1 className="mt-2 max-w-[22ch] text-4xl font-extrabold tracking-tight sm:text-5xl">
-            {profile.headline}
-          </h1>
-        </div>
-      </header>
+      <PageHeader kicker="About" title="Engineer first. AI agents for the last three years." lead={profile.headline} />
 
-      <section className="mx-auto grid max-w-6xl gap-10 px-5 py-12 lg:grid-cols-[minmax(0,35rem)_260px]">
-        <div className="space-y-4">
+      <section className="mx-auto grid max-w-6xl gap-10 px-5 pb-16 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-14">
+        <div className="divide-y border-y">
           {profile.intro.map((paragraph, index) => (
-            <Reveal key={paragraph.slice(0, 24)} delay={index * 55}>
-              <p className="max-w-[68ch] text-[17px] leading-relaxed text-muted-foreground">
-                {paragraph}
-              </p>
+            <Reveal key={paragraph.slice(0, 24)} delay={index * 50}>
+              <div className="grid gap-2 py-6 sm:grid-cols-[180px_minmax(0,1fr)] sm:gap-8">
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-tangerine sm:pt-1.5">{CHAPTERS[index] ?? ""}</p>
+                <p className="text-[16.5px] leading-relaxed text-foreground/85">{paragraph}</p>
+              </div>
             </Reveal>
           ))}
         </div>
 
-        <aside className="lg:sticky lg:top-20 lg:self-start">
-          <Card className="gap-0 overflow-hidden pt-0">
-            <Image
-              src={profile.photo}
-              alt={profile.name}
-              width={520}
-              height={520}
-              className="aspect-square w-full object-cover"
-            />
-            <CardContent className="space-y-3 pt-5 text-sm">
+        <aside className="lg:sticky lg:top-28 lg:self-start">
+          <div className="overflow-hidden rounded-[28px] border bg-cobalt text-white">
+            <div className="relative p-5 pb-0">
+              <Image
+                src={profile.photo}
+                alt={profile.name}
+                width={640}
+                height={640}
+                className="aspect-square w-full rounded-[20px] border-4 border-white/90 object-cover"
+              />
+            </div>
+            <dl className="space-y-3 p-6 text-sm">
               <Fact term="Based in">{profile.location}</Fact>
+              <Fact term="Local time">
+                <LocalTime /> UTC+5
+              </Fact>
               <Fact term="Focus">{profile.focus}</Fact>
+              <Fact term="Education">BS Computer Science, FAST NUCES Lahore, 2021</Fact>
               <Fact term="Availability">{profile.available}</Fact>
-              <Button asChild className="w-full">
+            </dl>
+            <div className="flex gap-2 px-6 pb-6">
+              <Button asChild className="flex-1 rounded-full bg-white text-ink hover:bg-white/90" data-watch="happy">
                 <Link href="/contact">Get in touch</Link>
               </Button>
-            </CardContent>
-          </Card>
+              <Button asChild variant="ghost" className="rounded-full text-white hover:bg-white/10 hover:text-white">
+                <a href={profile.cv} download="Waleed-Iqbal-CV.pdf">
+                  <Download className="size-4" /> CV
+                </a>
+              </Button>
+            </div>
+          </div>
         </aside>
       </section>
 
-      <section className="border-t">
-        <div className="mx-auto max-w-6xl px-5 py-12 xl:pr-[17.25rem]">
-          <h2 className="mb-6 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.09em] text-muted-foreground">
-            <span aria-hidden className="size-2.5 rounded-[3px] bg-chart-3" />
-            Stack
-          </h2>
-          <div className="space-y-3">
-            {skills.map((group, index) => (
-              <Reveal key={group.group} delay={index * 45}>
-                <Card>
-                  <CardContent className="space-y-3">
-                    <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      <span
-                        aria-hidden
-                        className="size-2 rounded-full"
-                        style={{ background: `var(--${TONE[(group.tone - 1) % TONE.length]})` }}
-                      />
-                      {group.group}
-                    </h3>
-                    <div className="flex flex-wrap gap-1.5">
-                      {group.items.map((item) => (
-                        <span
-                          key={item}
-                          className="inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-sm"
-                          style={{
-                            background: `color-mix(in srgb, var(--${TONE[(group.tone - 1) % TONE.length]}) 9%, transparent)`,
-                            borderColor: `color-mix(in srgb, var(--${TONE[(group.tone - 1) % TONE.length]}) 24%, transparent)`,
-                          }}
-                        >
-                          <span
-                            aria-hidden
-                            className="size-1.5 rounded-full"
-                            style={{
-                              background: `var(--${TONE[(group.tone - 1) % TONE.length]})`,
-                            }}
-                          />
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </Reveal>
-            ))}
+      <section className="mx-auto max-w-6xl px-5 pb-10">
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Stack</p>
+            <h2 className="mt-2 text-3xl font-extrabold tracking-tight">What I work with</h2>
           </div>
+          <Link href="/projects" className="inline-flex items-center gap-1.5 text-sm font-medium text-link">
+            See it in the projects <ArrowRight className="size-4" />
+          </Link>
+        </div>
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {skills.map((group, index) => (
+            <Reveal key={group.group} delay={index * 50} className={index === 1 ? "lg:col-span-2" : undefined}>
+              <div className="h-full rounded-[24px] border bg-card p-6">
+                <h3 className="flex items-center gap-2 font-display text-lg font-bold">
+                  <span className="size-2.5 rounded-full" style={{ background: GROUP_TONE[index % GROUP_TONE.length] }} />
+                  {group.group}
+                </h3>
+                <ul className="mt-4 flex flex-wrap gap-1.5">
+                  {group.items.map((item) => {
+                    const icon = ICON[item];
+                    return (
+                      <li key={item} className="inline-flex items-center gap-1.5 rounded-full border bg-background/50 px-3 py-1 text-sm">
+                        {icon && <TechIcon name={icon} className="text-[14px] text-muted-foreground" />}
+                        {item}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </Reveal>
+          ))}
         </div>
       </section>
     </>
@@ -109,10 +135,8 @@ export default function About() {
 function Fact({ term, children }: { term: string; children: React.ReactNode }) {
   return (
     <div>
-      <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-        {term}
-      </div>
-      <div className="mt-0.5 text-muted-foreground">{children}</div>
+      <dt className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-white/65">{term}</dt>
+      <dd className="mt-0.5 text-white/95">{children}</dd>
     </div>
   );
 }

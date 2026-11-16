@@ -1,142 +1,95 @@
+import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { CareerTimeline } from "@/components/CareerTimeline";
+import { Lead, PageHeader } from "@/components/PageHeader";
 import { Reveal } from "@/components/Reveal";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { career, experience, profile } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Experience",
-  description: `${profile.role} — evaluation platforms, agent systems, and client products.`,
+  description: `${profile.role}: evaluation platforms, agent systems and client products since 2021.`,
 };
 
-const TONE = ["chart-1", "chart-2", "chart-3", "chart-4", "chart-5", "chart-6"] as const;
+const TONES = ["var(--cobalt)", "var(--tangerine)"];
 
 export default function Experience() {
   return (
     <>
-      <header className="border-b">
-        <div className="mx-auto max-w-6xl px-5 py-12 xl:pr-[17.25rem]">
-          <p className="text-xs font-semibold uppercase tracking-[0.09em] text-primary">
-            Experience
-          </p>
-          <h1 className="mt-2 max-w-[26ch] text-4xl font-extrabold tracking-tight sm:text-5xl">
-            {career.headline}
-          </h1>
-          <p className="mt-4 max-w-[68ch] text-[17px] leading-relaxed text-muted-foreground">
-            {career.summary}
-          </p>
-        </div>
-      </header>
+      <PageHeader kicker="Experience" title={career.headline} lead={career.summary} />
 
-      <section className="mx-auto max-w-6xl px-5 py-12 xl:pr-[17.25rem]">
-        <ol className="relative space-y-5 border-l pl-6 sm:pl-8">
-          {experience.map((job, index) => {
-            const tone = TONE[index % TONE.length];
-            return (
-              <li key={job.company} className="relative">
-                <span
-                  aria-hidden
-                  className="absolute -left-[calc(1.5rem+5px)] top-7 size-2.5 rounded-full ring-4 ring-background sm:-left-[calc(2rem+5px)]"
-                  style={{ background: `var(--${tone})` }}
-                />
-                <Reveal delay={index * 55}>
-                  <Card
-                    style={{
-                      borderLeftColor: `color-mix(in srgb, var(--${tone}) 45%, transparent)`,
-                      borderLeftWidth: 3,
-                    }}
-                  >
-                    <CardContent className="space-y-5">
-                      <div className="space-y-2">
-                        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                          <h2 className="text-lg font-semibold tracking-tight">{job.company}</h2>
-                          <Badge variant="secondary" className="font-mono text-[11px] font-medium">
-                            {job.period}
-                          </Badge>
-                        </div>
-                        <p className="max-w-[68ch] text-[15px] leading-relaxed text-muted-foreground">
-                          {job.summary}
-                        </p>
-
-                      </div>
-
-                      <Separator />
-
-                      {/* The positions inside the employer, newest first, each with
-                          its own work. A single title across years reads as one job;
-                          the sections are what show the scope changing. */}
-                      <div className="space-y-7">
-                        {job.roles.map((step) => (
-                          <div key={step.title} className="space-y-3">
-                            <div className="flex flex-wrap items-baseline gap-x-2 leading-relaxed">
-                              <span
-                                aria-hidden
-                                className="size-1.5 shrink-0 self-center rounded-full"
-                                style={{ background: `color-mix(in srgb, var(--${tone}) 70%, transparent)` }}
-                              />
-                              <h3 className="text-[15px] font-semibold text-foreground/90">{step.title}</h3>
-                              <span className="font-mono text-[11px] text-muted-foreground">{step.period}</span>
-                            </div>
-                            <ul className="space-y-3">
-                              {step.lines.map((line) => (
-                                <li
-                                  key={line.slice(0, 28)}
-                                  className="flex gap-3 text-[15px] leading-relaxed text-muted-foreground"
-                                >
-                                  <span
-                                    aria-hidden
-                                    className="mt-[0.55rem] size-1.5 shrink-0 rounded-full"
-                                    style={{ background: `var(--${tone})` }}
-                                  />
-                                  <span className="text-foreground/85">{line}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="flex flex-wrap gap-1.5 pt-1">
-                        {job.stack.map((item) => (
-                          <span
-                            key={item}
-                            className="rounded-md border px-2 py-0.5 text-xs text-muted-foreground"
-                            style={{
-                              background: `color-mix(in srgb, var(--${tone}) 8%, transparent)`,
-                              borderColor: `color-mix(in srgb, var(--${tone}) 22%, transparent)`,
-                            }}
-                          >
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Reveal>
-              </li>
-            );
-          })}
-        </ol>
+      <section className="mx-auto max-w-6xl px-5 pb-6">
+        <Reveal>
+          <CareerTimeline />
+        </Reveal>
       </section>
 
-      <section className="border-t">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-10 xl:pr-[17.25rem]">
+      {experience.map((job, index) => {
+        const tone = TONES[index % TONES.length];
+        return (
+          <section key={job.company} className="mx-auto max-w-6xl px-5">
+            <div className="grid gap-8 border-t py-14 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-12">
+              <aside className="lg:sticky lg:top-28 lg:self-start">
+                <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+                  <span className="size-2 rounded-full" style={{ background: tone }} />
+                  {job.period}
+                </p>
+                <h2 className="mt-3 text-4xl font-extrabold tracking-tight">{job.company}</h2>
+                <p className="mt-2 font-medium text-link">{job.role}</p>
+                <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">{job.summary}</p>
+                <div className="mt-5 flex flex-wrap gap-1.5">
+                  {job.stack.map((item) => (
+                    <span key={item} className="rounded-full border bg-card px-2.5 py-0.5 font-mono text-[11px] text-muted-foreground">
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </aside>
+
+              <ol className="space-y-4">
+                {job.roles.map((role, i) => (
+                  <Reveal key={role.title} delay={i * 60}>
+                    <li className="rounded-[24px] border bg-card p-6 sm:p-7">
+                      <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+                        <h3 className="font-display text-xl font-bold leading-snug">{role.title}</h3>
+                        <span className="rounded-full border px-3 py-1 font-mono text-[11px] text-muted-foreground">{role.period}</span>
+                      </div>
+                      <ul className="mt-5 space-y-3.5">
+                        {role.lines.map((line) => (
+                          <li key={line.slice(0, 32)} className="flex gap-3 text-[15px] leading-relaxed text-muted-foreground">
+                            <span aria-hidden className="mt-[0.6rem] size-1.5 shrink-0 rounded-full" style={{ background: tone }} />
+                            <span>
+                              <Lead text={line} />
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  </Reveal>
+                ))}
+              </ol>
+            </div>
+          </section>
+        );
+      })}
+
+      <section className="mx-auto max-w-6xl px-5 pb-6 pt-4">
+        <div className="flex flex-col gap-5 rounded-[28px] border bg-card p-7 sm:flex-row sm:items-center sm:justify-between sm:p-9">
           <div>
-            <h2 className="text-lg font-semibold tracking-tight">The code, not the CV</h2>
-            <p className="mt-1 max-w-[52ch] text-sm text-muted-foreground">
-              The platform above is not public. The open source projects are, and every one of
-              them runs.
+            <h2 className="text-2xl font-extrabold tracking-tight">The platform is private. The projects are not.</h2>
+            <p className="mt-2 max-w-[56ch] text-muted-foreground">
+              Every project has a case study with its architecture, its stack and the numbers behind it.
             </p>
           </div>
-          <div className="flex gap-2">
-            <Button asChild>
-              <Link href="/projects">See the projects</Link>
+          <div className="flex shrink-0 gap-2">
+            <Button asChild className="rounded-full">
+              <Link href="/projects">
+                See the projects <ArrowRight className="size-4" />
+              </Link>
             </Button>
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" className="rounded-full">
               <Link href="/contact">Get in touch</Link>
             </Button>
           </div>

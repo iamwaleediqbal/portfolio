@@ -91,57 +91,11 @@ export const skills = [
  * pulled apart so each can be looked at without the other two in the way.
  */
 export const system = {
-  lead:
-    "Measuring whether an agent can operate software has three separate problems in it, and " +
-    "conflating them is how evaluation quietly goes wrong. Each project below is one of them.",
   layers: [
-    {
-      slug: "polyact",
-      step: "The model answers",
-      role: "Translate four provider dialects into one record",
-      owns:
-        "A model says where to click in whatever convention its provider chose, and reports " +
-        "tokens by whatever it counts. polyact turns that into one action in real screen " +
-        "pixels, with usage that means the same thing across providers.",
-      breaks:
-        "Read Gemini's 0–1000 grid as pixels and the agent clicks the top-left corner of every " +
-        "screen forever. It scores zero and reads as a weak model. Nothing raises.",
-    },
-    {
-      slug: "clickmail",
-      step: "Something happens",
-      role: "Be the application, and say what state you are in",
-      owns:
-        "A mail client with fifty-two messages across seven folders, deployed publicly so anyone " +
-        "can click around it. It publishes a read-and-reset contract and knows nothing " +
-        "about tasks, grading or models.",
-      breaks:
-        "An environment that knows it is being tested is one whose results do not transfer. " +
-        "Keeping the grader inside it made the whole thing look like it could only ever score " +
-        "itself.",
-    },
-    {
-      slug: "agentscore",
-      step: "Somebody decides whether it worked",
-      role: "Drive the application, grade the result, and repeat it enough times to mean something",
-      owns:
-        "The harness. It opens the environment in a real browser, fetches the world before the " +
-        "task and after it, grades one snapshot against the other, and keeps both — so a change " +
-        "to the grading logic is retested against every past run without paying for a single " +
-        "model call.",
-      breaks:
-        "One run is not a result, and a verdict you cannot recompute is a number you have to " +
-        "take on trust. A leaderboard built from single runs reorders itself for no reason " +
-        "anyone can explain, and three out of three gets reported as 100%.",
-    },
+    { slug: "polyact", step: "The model answers", role: "Turns four provider formats into one action in real pixels." },
+    { slug: "clickmail", step: "Something happens", role: "The app under test. Reports its state and nothing else." },
+    { slug: "agentscore", step: "Somebody decides", role: "Drives the app, grades the change, repeats it enough to mean something." },
   ],
-  honesty:
-    "The harness reaches the environment over HTTP, with no shared process and no privileged " +
-    "access — which is the only arrangement under which \"it could drive a real application\" " +
-    "means anything. polyact stays separate because it is a library, not a service. The " +
-    "dependency between them is in the argument rather than the imports: grading is worthless " +
-    "if the coordinates were mistranslated on the way in, and a correct grade on one attempt " +
-    "says nothing until it has been repeated.",
 };
 
 /**
@@ -177,135 +131,25 @@ export const cycle = {
     "One evaluation run, start to finish. Scheduling, isolation and review all sit outside this loop.",
 };
 
-export interface Project {
-  slug: string;
-  name: string;
-  /**
-   * Where it sits. agentscore is the main project, polyact and clickmail exist
-   * to serve it, and the products are live things people use.
-   */
-  kind: "main" | "companion" | "product";
-  tagline: string;
-  /** The part this piece plays in the stack, for a reader meeting it cold. */
-  part?: string;
-  what: string;
-  why: string;
-  stack: string[];
-  repo?: string;
-  live?: string;
-  /** A real screenshot of the running thing, from public/shots. */
-  image?: string;
-  status: "open source" | "live demo" | "product";
-  highlights: string[];
-}
+export { projects, projectBySlug, type Project } from "./projects";
 
-export const projects: Project[] = [
+/**
+ * Private repos shown in the GitHub section: visible, not openable. Only repos
+ * named here appear, so an employer's or a client's repo can never show up by
+ * accident. The card opens the case study rather than GitHub.
+ */
+export const privateRepos = [
   {
-    slug: "agentscore",
-    name: "agentscore",
-    kind: "main",
-    tagline: "My main open source project: an evaluation harness for computer use agents",
-    status: "open source",
-    part: "The main project. It is the only piece that talks to a model and the one that decides what a run was worth. polyact and clickmail below exist to serve it.",
-    what: "Opens an environment in a real browser, fetches the world before the task and after it, and grades one snapshot against the other — never the route taken. Both snapshots are kept, so a change to the grading logic is retested against every past run without a single model call. A separate suite repeats short tasks across free models and reports intervals rather than numbers.",
-    why: "One run is not a result. A leaderboard built from single runs reorders itself nightly for no reason anyone can explain.",
-    stack: ["Next.js", "TypeScript", "Playwright", "Python", "OpenRouter"],
-    repo: "https://github.com/iamwaleediqbal/agentscore",
-    live: "https://agentscore-sigma.vercel.app",
-    image: "/shots/agentscore.webp",
-    highlights: [
-      "48 recorded runs so far: 6 tasks across 5 models in both action spaces, for $0.65 of model spend in total. Three of the five models score strictly better reading the screen as text than as pixels; one is the other way round. A single blended score would have hidden that entirely, which is why the two are never averaged.",
-      "Regrading is one command. Every run keeps the before and after snapshot, so after a change to the grading logic, npm run regrade scores all past runs again with no model call, no browser and no environment, and lists exactly which verdicts moved. Its tests reproduce all 48 published verdicts from the snapshots alone.",
-      "Wilson intervals, so three out of three reports 100% with a lower bound near 44%, which is the correct amount of confidence to have in three attempts.",
-      "Overlapping intervals share a rank and are marked tied. Ranking them anyway invents a difference the data cannot support.",
-      "Deterministic checks run first. A judge is a model, so it brings its own variance on top of the variance you were trying to measure, and it is a last resort rather than a default.",
-      "The browser runner carries polyact's coordinate rules in TypeScript, because a paid Gemini run proved it needs them: Gemini answered on a 0-1000 grid while the harness read most of its clicks as pixels, so the clicks landed where it had never aimed and the model was scored for the harness's arithmetic.",
-      "Every turn is a real tool call. The two action spaces differ in what the model is shown and what it can name — not in how it replies, because a difference in transport would show up in the comparison as if it were a difference in skill.",
-      "The console shows the system prompts exactly as sent, generated from the same constants the runner uses rather than transcribed — a benchmark that paraphrases what it told the model is not reproducible by anyone reading it.",
-      "Runs in GitHub Actions on demand and commits a JSON file. No server, no database, no key on the deployment — and no schedule, because a benchmark nobody watched is a number nobody should trust.",
-    ],
+    name: "anchorly",
+    description: "AI shopping assistant for Shopify stores, answering from the store's own data.",
+    language: "TypeScript",
+    caseStudy: "/projects/anchorly",
   },
   {
-    slug: "polyact",
-    name: "polyact",
-    kind: "companion",
-    tagline: "One action schema for computer-use agents",
-    status: "open source",
-    part: "Companion to agentscore. It is where four provider formats become one, so the harness never has to know which provider answered.",
-    what: "A Python library that turns four incompatible provider response formats into one record, in real screen pixels, with token accounting that survives a provider change.",
-    why: "The largest source of quiet, score-corrupting bugs in agent evaluation is not prompting or grading. It is that providers disagree about what their own output means, and the disagreements do not raise. They degrade.",
-    stack: ["Python", "async", "pytest"],
-    repo: "https://github.com/iamwaleediqbal/polyact",
-    highlights: [
-      "Gemini emits 0-1000 coordinates, OpenAI emits pixels. Read one as the other and the agent clicks the top-left corner of every screen forever, scores zero, and looks like a weak model. This is not hypothetical: agentscore hit it on a real paid run, and now carries the same rules.",
-      "OpenAI's input token count includes cached tokens. Anthropic's excludes them. Get it backwards and a cached run looks cheaper than it was until the invoice arrives.",
-      "A broken proxy is not a bad model. Transport failures are kept separate from model failures all the way to the report, because an attempt that never reached a model is an absent measurement, not a zero.",
-      "The whole suite runs offline in under a second, because the model call is injected rather than made inside the loop — which is also what makes the budget and termination logic testable at all.",
-    ],
-  },
-  {
-    slug: "clickmail",
-    name: "clickmail",
-    kind: "companion",
-    tagline: "The application under test, and nothing else",
-    status: "live demo",
-    part: "Companion to agentscore. It is the application the harness drives, and it knows nothing about models, tasks or grading, which is what keeps the harness honest.",
-    what: "A public mail client — fifty-two messages, seven folders, search, labels, spam — that exists to be operated by something that is not a person. It publishes a small read-and-reset contract and knows nothing about tasks, grading or models.",
-    why: "An environment that contains its own grader can only ever score itself. Separating them is what makes \"point the harness at a real application\" a question of writing an adapter rather than rewriting the grader.",
-    stack: ["Next.js", "TypeScript", "Vercel"],
-    repo: "https://github.com/iamwaleediqbal/clickmail",
-    // /gym, not the bare origin. The origin is a landing page; the mailbox and
-    // the published contract — the thing the harness drives — live at /gym, and
-    // that is where every other surface sends people.
-    live: "https://clickmail-sigma.vercel.app/gym",
-    image: "/shots/clickmail.webp",
-    highlights: [
-      "Read and reset is the whole interface a harness gets: report the world, or discard it and report the world it starts in. There is deliberately no way to install a state from outside — a driver that could write the world could write the answer. No storage key, no DOM, no framework; the same surface a real application could be made to expose.",
-      "It also reports which controls it is currently rendering, so a harness can refuse to spend a turn on an action space the interface no longer offers. That pair has drifted before, in both directions.",
-      "Opening an email marks it read, deliberately, because that is what a mail client does — and it is the most common way an agent changes something nobody asked it to.",
-      "The suite needs nothing installed — Node's own test runner, no dependencies — and a mutation check reintroduces every bug it is meant to catch, one at a time, failing if the suite stays green. A passing suite proves nothing if it could not go red. The environment is deliberately small; the harness is where most of the testing lives.",
-    ],
-  },
-  {
-    slug: "anchorly",
-    name: "Anchorly",
-    kind: "product",
-    tagline: "A retrieval grounded AI shopping assistant for Shopify stores",
-    status: "product",
-    part: "A public product: an AI shopping assistant live for Shopify merchants.",
-    what: "Syncs each store's products, pages and policies into PostgreSQL with pgvector, and describes every product photo once with a vision model so shoppers can search by how items look. Price and stock come from live tool calls, never from model memory or stuffed context.",
-    why: "Competing chatbot apps get churned over for inventing prices and fabricating policies. The whole architecture exists to make that class of failure structurally impossible rather than merely unlikely.",
-    stack: ["Node.js", "TypeScript", "Shopify Remix", "Prisma", "PostgreSQL", "pgvector", "BullMQ", "OpenRouter"],
-    live: "https://anchorlychat.com",
-    image: "/shots/anchorly.webp",
-    highlights: [
-      "Tested on one store of 280 products from different vendors and niches, it found the right product 51 out of 51 times and never invented a product or a price.",
-      "Below a relevance floor it declines and takes the shopper's email instead of guessing. It answered honestly all 8 times a store did not sell what the shopper asked for.",
-      "Hybrid retrieval, vectors plus keyword search fused with Reciprocal Rank Fusion, so exact product names and codes still match.",
-      "A one time store setup runs on a stronger model and daily chat runs on low cost models, with tools scoped to what a shopper is allowed to see.",
-      "Capability switches are enforced by removing tools, not by asking the model nicely, and built in audits grade answers against the store's own catalog.",
-      "Unanswered questions are deduplicated and counted, which turns support volume into a list of what to write next.",
-    ],
-  },
-  {
-    slug: "my-quran-companion",
-    name: "My Quran Companion",
-    kind: "product",
-    tagline: "An AI companion that answers only from the Quran and authentic hadith",
-    status: "product",
-    part: "A public product: free, with no ads, live on the web with an Android app.",
-    what: "People ask a question in their own language and get an answer built only from the Quran and authentic hadith, with every source shown as a card with its reference and grade. The model never writes scripture itself. It picks numbered sources, and the app shows their exact text from its own database.",
-    why: "A general chatbot will happily invent a hadith or misquote an ayah, and in this subject a made up source is the worst possible failure. The design makes that failure something the system catches, not something it hopes to avoid.",
-    stack: ["Python", "FastAPI", "LangGraph", "PostgreSQL", "pgvector", "Expo", "React Native", "Anthropic", "OpenRouter"],
-    live: "https://myqurancompanion.com",
-    image: "/shots/quran.webp",
-    highlights: [
-      "Any reply that cites, quotes or numbers something outside the retrieved sources is rejected and retried once, then replaced by a fixed message that shows the sources.",
-      "A hadith reaches a reply only if it passes every authenticity gate: graded sahih or hasan, full text, a connected chain, and Arabic checked against an independent copy. 29,360 of the 69,408 stored hadith pass.",
-      "People can check a saying they heard. An Arabic quote is matched word for word, and the reply says whether a source matches, is similar or was not found.",
-      "Eight languages including Arabic and Urdu, with the layout switching to right to left, from one Expo codebase for web and Android.",
-      "Scripture lives in its own database behind a read only role. What people write is encrypted with AES-256-GCM, and every model call is logged with its cost.",
-    ],
+    name: "qurancompanion",
+    description: "Quran and hadith companion. Every answer shows its sources in full.",
+    language: "Python",
+    caseStudy: "/projects/my-quran-companion",
   },
 ];
 
@@ -319,6 +163,8 @@ export const career = {
 
 export interface Role {
   title: string;
+  /** For the career timeline, where there is room for three or four words. */
+  short: string;
   period: string;
   lines: string[];
 }
@@ -341,42 +187,45 @@ export const experience: Job[] = [
   {
     company: "Turing",
     role: "Software Engineer, Agentic AI Evaluation Platform",
-    period: "Sep 2023 - present",
+    period: "Sep 2023 to present",
     summary:
       "Evaluation infrastructure for AI agents end to end: the environments, the runner, the grading, the review pipeline and delivery to the client. One remote, full time contract across three scopes.",
     roles: [
       {
         title: "Software Engineer, Agentic AI Evaluation Platform",
-        period: "Sep 2025 - present",
+        short: "Evaluation platform",
+        period: "Sep 2025 to present",
         lines: [
-          "One of the core engineers who took the agent evaluation platform to production within three months of its first commit, on FastAPI, Celery, Redis, PostgreSQL and Next.js across GCP and AWS. About 500 people use it daily, and on its busiest days it runs more than 2,000 evaluations across 10 to 15 simulated web apps.",
-          "Built the review pipeline a client asked for: humans perform each task, an AI review scores it, and reviewers sign it off or send it back for rework, with every role and handoff permissioned and approved work shipped in the client's own format. Weekly output rose from about 100 tasks to 500 to 800, once reaching 1,000, while client rejections fell.",
-          "Ran OSWorld desktop benchmarks on isolated Ubuntu and Windows VMs, first on GKE pods through QEMU, then on AWS after leading the move to OSWorld V2. Up to 10 desktops run at once across as many as 10 nodes, with each run taking 3 to 4 hours.",
-          "Added VM checkpoints and state restore so graders rerun on a saved desktop instead of replaying the whole run, cutting cost per task from about $400 to $50, and let human testers work inside the same VMs with live grading.",
-          "Integrated computer use agents from OpenAI, Anthropic and Gemini plus self hosted Qwen3-VL and UI-TARS on vLLM, mapping every provider's actions and coordinates into one trajectory format under shared rules.",
-          "Designed layered grading that checks each result with golden references, LLM evaluators, DOM and state assertions and graders inside the environment, so results are repeatable and valid alternative solutions still pass.",
-          "Ran 30+ long running agent tasks at once without duplicate dispatch, recovering automatically from worker loss, using atomic claims, PostgreSQL advisory locks, Redis leases and watchdog sweeps.",
-          "Built the checks that accept a BrowseComp task only if models without internet fail it (closed book), then rerun it with search in the same chat after approval to prove its evidence holds (answer back). Integrated OpenAI and Gemini agents into Harbor for these tasks.",
-          "Hardened the verification service after a model's MCP tools were found running as root: disabled stdio MCP execution, moved every container to a non root user, closed SSRF and authorization gaps and cleared all High and Critical dependency alerts.",
-          "Caught a supply chain attack that hid an obfuscated payload in the ESLint config of three team repos, reported it to management and removed it from every working branch within 30 minutes.",
-          "Reviewed teammates' pull requests and mentored new engineers through onboarding.",
+          "**One of the core engineers who took the agent evaluation platform to production within three months of its first commit**, on FastAPI, Celery, Redis, PostgreSQL and Next.js across GCP and AWS. About 500 people use it daily, and on its busiest days it runs more than 2,000 evaluations across 10 to 15 simulated web apps.",
+          "**Built the review pipeline a client asked for**: humans perform each task, an AI review scores it, and reviewers sign it off or send it back for rework, with every role and handoff permissioned and approved work shipped in the client's own format. Weekly output rose from about 100 tasks to 500 to 800, once reaching 1,000, while client rejections fell.",
+          "**Ran OSWorld desktop benchmarks on isolated Ubuntu and Windows VMs**, first on GKE pods through QEMU, then on AWS after leading the move to OSWorld V2. Up to 10 desktops run at once across as many as 10 nodes, with each run taking 3 to 4 hours.",
+          "**Added VM checkpoints and state restore** so graders rerun on a saved desktop instead of replaying the whole run, cutting cost per task from about $400 to $50, and let human testers work inside the same VMs with live grading.",
+          "**Integrated computer use agents from OpenAI, Anthropic and Gemini plus self hosted Qwen3-VL and UI-TARS on vLLM**, mapping every provider's actions and coordinates into one trajectory format under shared rules.",
+          "**Designed layered grading** that checks each result with golden references, LLM evaluators, DOM and state assertions and graders inside the environment, so results are repeatable and valid alternative solutions still pass.",
+          "**Ran 30+ long running agent tasks at once without duplicate dispatch**, recovering automatically from worker loss, using atomic claims, PostgreSQL advisory locks, Redis leases and watchdog sweeps.",
+          "**Built the checks that accept a BrowseComp task only if models without internet fail it** (closed book), then rerun it with search in the same chat after approval to prove its evidence holds (answer back). Integrated OpenAI and Gemini agents into Harbor for these tasks.",
+          "**Hardened the verification service** after a model's MCP tools were found running as root: disabled stdio MCP execution, moved every container to a non root user, closed SSRF and authorization gaps and cleared all High and Critical dependency alerts.",
+          "**Caught a supply chain attack** that hid an obfuscated payload in the ESLint config of three team repos, reported it to management and removed it from every working branch within 30 minutes.",
+          "**Reviewed teammates' pull requests and mentored new engineers** through onboarding.",
         ],
       },
       {
         title: "Software Engineer, Agentic RL Environments",
-        period: "Jul 2024 - Aug 2025",
+        short: "RL environments",
+        period: "Jul 2024 to Aug 2025",
         lines: [
-          "Recreated production SaaS apps, including Salesforce, another CRM, and healthcare and travel booking apps, as offline React clones with no outside dependencies, so agent runs are reproducible.",
-          "Designed multi step agent tasks graded on the final state of the app rather than the answer text.",
-          "Built prompt generation for each task type and multi agent workflows that check tasks and submissions before a human reviewer sees them.",
+          "**Recreated production SaaS apps**, including Salesforce, another CRM, and healthcare and travel booking apps, as offline React clones with no outside dependencies, so agent runs are reproducible.",
+          "**Designed multi step agent tasks graded on the final state of the app** rather than the answer text.",
+          "**Built prompt generation for each task type** and multi agent workflows that check tasks and submissions before a human reviewer sees them.",
         ],
       },
       {
         title: "Software Engineer, LLM Code Generation and Computer Use",
-        period: "Sep 2023 - Jun 2024",
+        short: "LLM coding",
+        period: "Sep 2023 to Jun 2024",
         lines: [
-          "Wrote and graded Python solutions that became training and benchmark data for LLM coding models, growing from single algorithm problems to Django and React apps built over several rounds.",
-          "Ran full development workflows with computer use agents on macOS, Ubuntu and Chromium, writing targeted prompts that exposed where models failed at reading, changing and debugging code.",
+          "**Wrote and graded Python solutions that became training and benchmark data for LLM coding models**, growing from single algorithm problems to Django and React apps built over several rounds.",
+          "**Ran full development workflows with computer use agents on macOS, Ubuntu and Chromium**, writing targeted prompts that exposed where models failed at reading, changing and debugging code.",
         ],
       },
     ],
@@ -385,33 +234,36 @@ export const experience: Job[] = [
   {
     company: "Softaims",
     role: "Senior Software Engineer",
-    period: "Aug 2021 - Jul 2024",
+    period: "Aug 2021 to Jul 2024",
     summary:
       "Client product work across commerce, publishing and fintech, promoted every year from associate to senior engineer. The final ten months ran concurrently with the Turing contract, with both employers' knowledge.",
     roles: [
       {
         title: "Senior Software Engineer",
-        period: "Aug 2023 - Jul 2024",
+        short: "Senior engineer",
+        period: "Aug 2023 to Jul 2024",
         lines: [
-          "Led architecture, delivery planning and releases for three concurrent client products with a team of three engineers, reporting production risk directly to clients.",
-          "Took an upsell app rebuilt from a five year old codebase through Shopify App Store review, with theme app extensions, order history based recommendations and a GraphQL rewrite for Shopify's API transition.",
+          "**Led architecture, delivery planning and releases for three concurrent client products** with a team of three engineers, reporting production risk directly to clients.",
+          "**Took an upsell app rebuilt from a five year old codebase through Shopify App Store review**, with theme app extensions, order history based recommendations and a GraphQL rewrite for Shopify's API transition.",
         ],
       },
       {
         title: "Software Engineer",
-        period: "Aug 2022 - Aug 2023",
+        short: "Engineer",
+        period: "Aug 2022 to Aug 2023",
         lines: [
-          "Rebuilt delivery on GitLab CI/CD with Dockerised builds to Heroku, so a non technical client running a network of German institutes could review every branch and ship it with one click.",
-          "Gave every institute its own subdomain on a shared Rails and React codebase, rebuilt the interface on Tailwind and integrated the institutes' administration APIs.",
-          "Built a Shopify app with Stripe billing and idempotent webhooks, so retries never charge a customer twice.",
+          "**Rebuilt delivery on GitLab CI/CD with Dockerised builds to Heroku**, so a non technical client running a network of German institutes could review every branch and ship it with one click.",
+          "**Gave every institute its own subdomain on a shared Rails and React codebase**, rebuilt the interface on Tailwind and integrated the institutes' administration APIs.",
+          "**Built a Shopify app with Stripe billing and idempotent webhooks**, so retries never charge a customer twice.",
         ],
       },
       {
         title: "Associate Software Engineer",
-        period: "Aug 2021 - Aug 2022",
+        short: "Associate",
+        period: "Aug 2021 to Aug 2022",
         lines: [
-          "Built an embeddable WebRTC support tool that lets agents see a customer's screen with video and audio calling, plus a Chrome extension recording straight to storage via FFmpeg.",
-          "Cut page loads on an overloaded crypto platform from about 5 seconds to under 1 by moving the UI to Next.js and realtime third party fetching onto cached Redis workers.",
+          "**Built an embeddable WebRTC support tool** that lets agents see a customer's screen with video and audio calling, plus a Chrome extension recording straight to storage via FFmpeg.",
+          "**Cut page loads on an overloaded crypto platform from about 5 seconds to under 1** by moving the UI to Next.js and realtime third party fetching onto cached Redis workers.",
         ],
       },
     ],

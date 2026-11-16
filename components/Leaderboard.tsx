@@ -106,9 +106,9 @@ export function Leaderboard() {
           <>Rows whose intervals overlap cannot be ordered, and are not.</>
         ) : (
           <>
-            Every interval here overlaps every other, so nothing on this chart is separable yet
-            — which is the correct reading of a handful of runs per row, and the reason the
-            ranking is not shown. More runs narrow the bands; nothing else does.
+            Every interval here overlaps every other, so nothing on this chart can be ordered
+            yet. That is the honest reading of a handful of runs per row, and why no ranking is
+            shown. More runs narrow the bands. Nothing else does.
           </>
         )}{" "}
         The full trajectories, screenshots and state snapshots are on{" "}

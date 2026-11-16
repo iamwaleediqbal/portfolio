@@ -1,7 +1,8 @@
 "use client";
 
-import { ArrowUpRight, CalendarDays, Flame, FolderGit2, GitCommitHorizontal, Github, Star } from "lucide-react";
+import { ArrowRight, ArrowUpRight, CalendarDays, Flame, FolderGit2, GitCommitHorizontal, Github, Lock, Star } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import type { GitHubData, GitHubDay } from "@/lib/github";
@@ -30,6 +31,7 @@ export function GitHubLive({ initial }: { initial: GitHubData }) {
   }, []);
 
   const since = new Date(data.profile.createdAt).getFullYear();
+  const privateCount = data.repos.filter((repo) => repo.private).length;
   const stats = [
     { icon: GitCommitHorizontal, value: data.stats.contributions.toLocaleString("en-US"), label: "contributions, last 12 months", tone: "text-mint-ink" },
     { icon: FolderGit2, value: data.profile.publicRepos.toString(), label: "public repositories", tone: "text-sun-ink" },
@@ -131,18 +133,36 @@ export function GitHubLive({ initial }: { initial: GitHubData }) {
 
         {/* repositories */}
         <div className="p-5 sm:p-6">
-          <h3 className="mb-4 font-display text-base font-bold">Repositories</h3>
+          <div className="mb-4 flex items-baseline justify-between gap-3">
+            <h3 className="font-display text-base font-bold">Repositories</h3>
+            {privateCount > 0 && (
+              <p className="flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground">
+                <Lock className="size-3" />
+                {privateCount} private, shown not opened
+              </p>
+            )}
+          </div>
           <ul className="grid gap-3 sm:grid-cols-2">
             {data.repos.map((repo) => (
               <li key={repo.name}>
-                <a
-                  href={repo.url}
-                  className="group flex h-full flex-col gap-2 rounded-2xl border bg-background/40 p-4 transition hover:-translate-y-0.5 hover:border-link/50"
+                <RepoLink
+                  repo={repo}
+                  className={cn(
+                    "group flex h-full flex-col gap-2 rounded-2xl border p-4 transition hover:-translate-y-0.5 hover:border-link/50",
+                    repo.private ? "border-dashed bg-secondary/30" : "bg-background/40",
+                  )}
                 >
                   <span className="flex items-center gap-2 font-mono text-sm font-medium">
-                    <FolderGit2 className="size-4 text-muted-foreground" />
+                    {repo.private ? <Lock className="size-4 text-muted-foreground" /> : <FolderGit2 className="size-4 text-muted-foreground" />}
                     {repo.name}
-                    <ArrowUpRight className="ml-auto size-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-foreground" />
+                    {repo.private && (
+                      <span className="rounded-full border px-1.5 py-px font-sans text-[10px] font-normal text-muted-foreground">Private</span>
+                    )}
+                    {repo.private ? (
+                      <ArrowRight className="ml-auto size-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-foreground" />
+                    ) : (
+                      <ArrowUpRight className="ml-auto size-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-foreground" />
+                    )}
                   </span>
                   {repo.description && <span className="line-clamp-2 text-sm text-muted-foreground">{repo.description}</span>}
                   <span className="mt-auto flex items-center gap-3 pt-1 text-xs text-muted-foreground">
@@ -159,16 +179,32 @@ export function GitHubLive({ initial }: { initial: GitHubData }) {
                       </span>
                     )}
                     <span className="ml-auto" suppressHydrationWarning>
-                      pushed {ago(repo.pushedAt)}
+                      {repo.pushedAt ? `pushed ${ago(repo.pushedAt)}` : repo.private ? "case study" : ""}
                     </span>
                   </span>
-                </a>
+                </RepoLink>
               </li>
             ))}
           </ul>
         </div>
       </div>
     </div>
+  );
+}
+
+/** Public repos open on GitHub. Private ones open their case study on this site. */
+function RepoLink({ repo, className, children }: { repo: GitHubData["repos"][number]; className: string; children: React.ReactNode }) {
+  if (repo.private) {
+    return (
+      <Link href={repo.url} className={className} title="Private repository. The case study explains the work.">
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <a href={repo.url} className={className}>
+      {children}
+    </a>
   );
 }
 

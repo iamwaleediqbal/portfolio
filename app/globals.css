@@ -265,6 +265,13 @@
     background-size: 44px 44px;
     mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 40%, transparent 100%);
   }
+  /* The same grid, unmasked and fainter, for the inside of diagram panels. */
+  .bg-blueprint-soft {
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--foreground) 4%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--foreground) 4%, transparent) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
   .text-link {
     color: var(--link);
   }

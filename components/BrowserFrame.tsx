@@ -13,12 +13,16 @@ export function BrowserFrame({
   url,
   className,
   priority = false,
+  width = 1280,
+  height = 800,
 }: {
   src: string;
   alt: string;
   url: string;
   className?: string;
   priority?: boolean;
+  width?: number;
+  height?: number;
 }) {
   return (
     <div className={cn("overflow-hidden rounded-2xl border bg-secondary shadow-[0_30px_80px_-40px_rgb(0_0_0/0.7)]", className)}>
@@ -37,8 +41,8 @@ export function BrowserFrame({
         <Image
           src={src}
           alt={alt}
-          width={1280}
-          height={800}
+          width={width}
+          height={height}
           priority={priority}
           className="h-auto w-full transition-transform duration-700 ease-out group-hover:scale-[1.03]"
         />

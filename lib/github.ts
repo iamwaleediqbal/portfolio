@@ -9,8 +9,14 @@
  *    the contribution calendar is read from the same public page github.com
  *    draws on a profile. That is enough because the result is cached for half
  *    an hour (see app/api/github/route.ts).
- *  - With GITHUB_TOKEN (any classic token, no scopes needed), the calendar
- *    comes from the GraphQL API instead and the hourly limit is 5,000.
+ *  - With GITHUB_TOKEN, the calendar comes from the GraphQL API instead and
+ *    the hourly limit is 5,000. A fine-grained token with read-only Metadata
+ *    access to the private repos listed in content/site.ts also fills in their
+ *    language and last push. The token never reaches the browser.
+ *
+ * Private repos are shown, never linked: the card opens the case study, and
+ * only repos named in content/site.ts appear, so nothing private is published
+ * by accident.
  *
  * If GitHub is down, rate limited or changes its markup, the section does not
  * break or go blank: every piece falls back to data/github-snapshot.json, and
@@ -18,6 +24,7 @@
  * the activity should be is worse than one that shows yesterday's activity.
  */
 
+import { privateRepos } from "@/content/site";
 import snapshot from "@/data/github-snapshot.json";
 
 export const GITHUB_USER = process.env.GITHUB_USER ?? "iamwaleediqbal";
@@ -40,7 +47,9 @@ export interface GitHubRepo {
   language: string | null;
   color: string;
   stars: number;
-  pushedAt: string;
+  pushedAt: string | null;
+  /** Shown without a link to GitHub; the card opens the case study instead. */
+  private?: boolean;
 }
 
 export interface GitHubLanguage {
@@ -295,6 +304,32 @@ async function getLanguages(repos: RestRepo[]): Promise<GitHubLanguage[]> {
 
 const SNAPSHOT = snapshot as GitHubData;
 
+/** Live details for the listed private repos when a token allows it, else what the content file says. */
+async function getPrivate(): Promise<{ cards: GitHubRepo[]; rest: RestRepo[] }> {
+  const live = process.env.GITHUB_TOKEN
+    ? await Promise.allSettled(privateRepos.map((repo) => getJSON<RestRepo>(`https://api.github.com/repos/${GITHUB_USER}/${repo.name}`)))
+    : [];
+  const rest: RestRepo[] = [];
+  const cards = privateRepos.map((repo, index) => {
+    const result = live[index];
+    const found = result && result.status === "fulfilled" && result.value.private ? result.value : null;
+    if (found) rest.push(found);
+    const language = found?.language ?? repo.language;
+    return {
+      name: repo.name,
+      description: repo.description,
+      url: repo.caseStudy,
+      homepage: null,
+      language,
+      color: colorOf(language),
+      stars: 0,
+      pushedAt: found?.pushed_at ?? null,
+      private: true,
+    };
+  });
+  return { cards, rest };
+}
+
 export async function getGitHub(): Promise<GitHubData> {
   try {
     const [user, repos] = await Promise.all([
@@ -302,10 +337,11 @@ export async function getGitHub(): Promise<GitHubData> {
       getJSON<RestRepo[]>(`https://api.github.com/users/${GITHUB_USER}/repos?per_page=100&type=owner&sort=pushed`),
     ]);
     const ranked = rank(repos, user.login);
+    const hidden = await getPrivate();
 
     // Each of these can fail on its own; one failure keeps the saved version
     // of that piece rather than losing the whole section.
-    const [calendar, languages] = await Promise.allSettled([getCalendar(), getLanguages(ranked)]);
+    const [calendar, languages] = await Promise.allSettled([getCalendar(), getLanguages([...ranked, ...hidden.rest])]);
     const days = calendar.status === "fulfilled" ? calendar.value : SNAPSHOT.calendar;
 
     return {
@@ -324,7 +360,7 @@ export async function getGitHub(): Promise<GitHubData> {
       stats: summarise(days),
       calendar: days,
       languages: languages.status === "fulfilled" ? languages.value : SNAPSHOT.languages,
-      repos: ranked.slice(0, 4).map((repo) => ({
+      repos: ranked.slice(0, 4).map((repo): GitHubRepo => ({
         name: repo.name,
         description: repo.description,
         url: repo.html_url,
@@ -333,9 +369,10 @@ export async function getGitHub(): Promise<GitHubData> {
         color: colorOf(repo.language),
         stars: repo.stargazers_count,
         pushedAt: repo.pushed_at,
-      })),
+      })).concat(hidden.cards),
     };
   } catch {
-    return { ...SNAPSHOT, source: "snapshot" };
+    const { cards } = await getPrivate().catch(() => ({ cards: [] as GitHubRepo[] }));
+    return { ...SNAPSHOT, source: "snapshot", repos: [...SNAPSHOT.repos.filter((repo) => !repo.private), ...cards] };
   }
 }

@@ -1,9 +1,11 @@
-import { FileDown, Github, Linkedin, MapPin } from "lucide-react";
+import { ArrowUpRight, FileDown, Mail } from "lucide-react";
 import type { Metadata } from "next";
 
 import { ContactForm } from "@/components/ContactForm";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { CopyEmail } from "@/components/CopyEmail";
+import { LocalTime } from "@/components/LocalTime";
+import { PageHeader } from "@/components/PageHeader";
+import { TechIcon } from "@/components/TechIcon";
 import { profile } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -14,103 +16,70 @@ export const metadata: Metadata = {
 export default function Contact() {
   return (
     <>
-      <header className="border-b">
-        <div className="mx-auto max-w-6xl px-5 py-12 xl:pr-[17.25rem]">
-          <p className="text-xs font-semibold uppercase tracking-[0.09em] text-primary">Contact</p>
-          <h1 className="mt-2 text-4xl font-extrabold tracking-tight sm:text-5xl">
-            Let&apos;s talk
-          </h1>
-          <p className="mt-3 max-w-[60ch] text-[17px] leading-relaxed text-muted-foreground">
-            Roles, contract work, or a question about anything on this site. I read everything and
-            usually reply within a day.
-          </p>
+      <PageHeader
+        kicker="Contact"
+        title="Let's talk."
+        lead="Roles, contract work, or a question about anything on this site. I read everything and usually reply within a day."
+      />
+
+      <section className="mx-auto grid max-w-6xl gap-4 px-5 pb-10 lg:grid-cols-[minmax(0,1fr)_380px]">
+        <div className="rounded-[28px] border bg-card p-6 sm:p-8">
+          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Send a message</p>
+          <div className="mt-5">
+            <ContactForm accessKey={process.env.NEXT_PUBLIC_WEB3FORMS_KEY} fallbackEmail={profile.email} />
+          </div>
         </div>
-      </header>
 
-      <section className="mx-auto grid max-w-6xl gap-8 px-5 py-12 lg:grid-cols-[minmax(0,35rem)_260px]">
-        <Card>
-          <CardContent>
-            <ContactForm
-              accessKey={process.env.NEXT_PUBLIC_WEB3FORMS_KEY}
-              fallbackEmail={profile.email}
-            />
-          </CardContent>
-        </Card>
+        <div className="grid gap-4">
+          <div className="rounded-[28px] bg-cobalt p-6 text-white">
+            <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-white/70">
+              <Mail className="size-3.5" /> Email
+            </p>
+            <a href={`mailto:${profile.email}`} className="mt-3 block break-all font-display text-xl font-bold hover:underline" data-watch="happy">
+              {profile.email}
+            </a>
+            <div className="mt-4">
+              <CopyEmail email={profile.email} />
+            </div>
+          </div>
 
-        <aside className="lg:sticky lg:top-20 lg:self-start">
-          <Card>
-            <CardContent className="space-y-4 text-sm">
-              <Fact icon={<MapPin className="size-4" aria-hidden />} term="Based in">
-                {profile.location}
-              </Fact>
-              <Separator />
-              <Fact term="Availability">
-                <span className="inline-flex items-center gap-2">
-                  <span
-                    aria-hidden
-                    className="size-2 animate-pulse rounded-full bg-chart-2"
-                  />
-                  {profile.available}
+          <div className="rounded-[28px] border bg-card p-6">
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Where and when</p>
+            <p className="mt-3 font-display text-3xl font-extrabold tabular-nums text-sun-ink">
+              <LocalTime />
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {profile.location}, UTC+5. Remote, or relocating.
+            </p>
+            <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-mint/40 bg-mint/10 px-3 py-1 text-xs text-mint-ink">
+              <span className="size-1.5 rounded-full bg-mint" />
+              {profile.available}
+            </p>
+          </div>
+
+          <div className="rounded-[28px] border bg-card p-3">
+            {[
+              { href: profile.github, label: "GitHub", sub: "Open source and products", icon: <TechIcon name="github" className="text-[18px]" /> },
+              { href: profile.linkedin, label: "LinkedIn", sub: "Work history", icon: <TechIcon name="linkedin" className="text-[18px]" /> },
+              { href: profile.cv, label: "Download CV", sub: "PDF, two pages", icon: <FileDown className="size-[18px]" />, download: true },
+            ].map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                {...(item.download ? { download: "Waleed-Iqbal-CV.pdf" } : { target: "_blank", rel: "noreferrer" })}
+                className="group flex items-center gap-3 rounded-2xl p-3 transition hover:bg-secondary"
+              >
+                <span className="grid size-10 place-items-center rounded-xl border bg-background">{item.icon}</span>
+                <span className="flex-1">
+                  <span className="block text-sm font-medium">{item.label}</span>
+                  <span className="block text-xs text-muted-foreground">{item.sub}</span>
                 </span>
-              </Fact>
-              <Separator />
-              <div className="space-y-2">
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Elsewhere
-                </div>
-                <a
-                  className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
-                  href={profile.github}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Github className="size-4" aria-hidden />
-                  GitHub
-                </a>
-                <a
-                  className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
-                  href={profile.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Linkedin className="size-4" aria-hidden />
-                  LinkedIn
-                </a>
-                {/* No target="_blank": a download does not navigate, so opening
-                    a tab for it leaves an empty one behind. */}
-                <a
-                  className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
-                  href={profile.cv}
-                  download="Waleed-Iqbal-CV.pdf"
-                >
-                  <FileDown className="size-4" aria-hidden />
-                  Download CV
-                </a>
-              </div>
-            </CardContent>
-          </Card>
-        </aside>
+                <ArrowUpRight className="size-4 text-muted-foreground transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </a>
+            ))}
+          </div>
+        </div>
       </section>
     </>
-  );
-}
-
-function Fact({
-  term,
-  icon,
-  children,
-}: {
-  term: string;
-  icon?: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-        {icon}
-        {term}
-      </div>
-      <div className="mt-1 text-muted-foreground">{children}</div>
-    </div>
   );
 }

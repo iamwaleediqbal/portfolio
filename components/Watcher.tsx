@@ -35,7 +35,7 @@ const REACH_Y = 26;
 
 type Mood = "watching" | "happy";
 
-export function Watcher({ className, label = true }: { className?: string; label?: boolean }) {
+export function Watcher({ className }: { className?: string }) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const pupilRefs = useRef<(SVGGElement | null)[]>([]);
   const [blink, setBlink] = useState(false);
@@ -180,11 +180,6 @@ export function Watcher({ className, label = true }: { className?: string; label
           </g>
         ))}
       </svg>
-      {label && (
-        <p className="mt-2 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-ink/70">
-          {mood === "happy" ? "oh, nice" : "$ xeyes --watch"}
-        </p>
-      )}
     </div>
   );
 }

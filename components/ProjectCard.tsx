@@ -1,109 +1,63 @@
-import { ArrowUpRight, Github } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 import { BrowserFrame } from "@/components/BrowserFrame";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Project } from "@/content/site";
+import { CodeCard } from "@/components/CodeCard";
+import type { Project } from "@/content/projects";
+import { cn } from "@/lib/utils";
 
-const TONE = ["chart-1", "chart-2", "chart-3", "chart-4", "chart-5", "chart-6"] as const;
-
-export function ProjectCard({ project, index }: { project: Project; index: number }) {
-  const tone = TONE[index % TONE.length];
-
+/**
+ * A project as a tile that opens its case study. The whole card is the link,
+ * because a reader scanning tiles clicks the picture, not the small text.
+ */
+export function ProjectCard({ project, wide = false }: { project: Project; wide?: boolean }) {
   return (
-    // Anchored on the slug so a single project has its own address. LinkedIn,
-    // Upwork and a message to a recruiter all want to point at one project, and
-    // /projects on its own makes the reader hunt for it. scroll-mt clears the
-    // sticky nav so the card is not parked underneath it on arrival.
-    <Card
-      id={project.slug}
-      className="group relative scroll-mt-24 gap-0 overflow-hidden rounded-[28px] pt-0 transition-shadow hover:shadow-[0_30px_80px_-50px_var(--cobalt)]"
-    >
-      <span
-        aria-hidden
-        className="absolute inset-x-0 top-0 h-[3px]"
-        style={{ background: `linear-gradient(90deg, var(--${tone}), transparent)` }}
-      />
-      {project.image && (project.live || project.repo) && (
-        <div
-          className="px-4 pt-6 sm:px-6"
-          style={{ background: `linear-gradient(180deg, color-mix(in srgb, var(--${tone}) 16%, transparent), transparent)` }}
-        >
-          <BrowserFrame src={project.image} alt={`${project.name}, running`} url={(project.live ?? project.repo)!} />
-        </div>
+    <Link
+      href={`/projects/${project.slug}`}
+      className={cn(
+        "group grid h-full grid-cols-[minmax(0,1fr)] overflow-hidden rounded-[28px] border bg-card transition hover:-translate-y-0.5 hover:shadow-[0_30px_80px_-50px_var(--cobalt)]",
+        wide && "lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]",
       )}
-      <CardHeader className="pt-6">
-        <div className="flex flex-wrap items-center gap-2">
-          <CardTitle className="font-display text-2xl font-extrabold tracking-tight">{project.name}</CardTitle>
-          <Badge variant="secondary" className="font-normal capitalize">
-            {project.status}
-          </Badge>
-        </div>
-        <p className="text-sm text-muted-foreground">{project.tagline}</p>
-      </CardHeader>
+    >
+      <div className={cn("flex min-w-0 flex-col p-6 sm:p-8", !wide && "order-2")}>
+        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{project.label}</p>
+        <h3 className={cn("mt-2 font-extrabold tracking-tight", wide ? "text-4xl sm:text-5xl" : "text-3xl")}>{project.name}</h3>
+        <p className="mt-3 max-w-[52ch] leading-relaxed text-muted-foreground">{project.summary}</p>
 
-      <CardContent className="space-y-4">
-        {project.part && (
-          <p
-            className="rounded-r-md border-l-2 py-2 pl-3 pr-3 text-sm text-muted-foreground"
-            style={{
-              borderColor: `var(--${tone})`,
-              background: `color-mix(in srgb, var(--${tone}) 6%, transparent)`,
-            }}
-          >
-            {project.part}
-          </p>
-        )}
-
-        <p className="text-[15px]">{project.what}</p>
-        <p className="text-[15px] text-muted-foreground">{project.why}</p>
-
-        <ul className="space-y-2">
-          {project.highlights.map((line) => (
-            <li key={line.slice(0, 24)} className="flex gap-2.5 text-sm text-muted-foreground">
-              <span
-                aria-hidden
-                className="mt-[7px] size-1.5 shrink-0 rounded-full"
-                style={{ background: `color-mix(in srgb, var(--${tone}) 65%, transparent)` }}
-              />
-              {line}
-            </li>
+        <dl className="mt-6 grid grid-cols-2 gap-2.5">
+          {project.stats.slice(0, wide ? 4 : 2).map((stat, i) => (
+            <div key={stat.label} className="rounded-2xl border bg-background/50 p-3.5">
+              <dt className="sr-only">{stat.label}</dt>
+              <dd className={cn("font-display text-2xl font-extrabold tabular-nums", i % 2 === 0 ? "text-sun-ink" : "text-mint-ink")}>{stat.value}</dd>
+              <dd className="mt-1 text-xs leading-snug text-muted-foreground">{stat.label}</dd>
+            </div>
           ))}
-        </ul>
+        </dl>
 
-        <div className="flex flex-wrap gap-1.5">
-          {project.stack.map((item) => (
-            <span
-              key={item}
-              className="rounded-md border bg-muted/50 px-2 py-0.5 font-mono text-[11px] text-muted-foreground"
-            >
-              {item}
+        <div className="mt-6 flex flex-wrap gap-1.5">
+          {project.stack.slice(0, 4).map((tech) => (
+            <span key={tech.name} className="rounded-full border px-2.5 py-0.5 font-mono text-[11px] text-muted-foreground">
+              {tech.name}
             </span>
           ))}
         </div>
 
-        {(project.repo || project.live) && (
-          <div className="flex flex-wrap gap-2 pt-1">
-            {project.live && (
-              <Button asChild size="sm">
-                <a href={project.live}>
-                  Try it live
-                  <ArrowUpRight className="size-3.5" />
-                </a>
-              </Button>
-            )}
-            {project.repo && (
-              <Button asChild size="sm" variant="outline">
-                <a href={project.repo}>
-                  <Github className="size-3.5" />
-                  Source
-                </a>
-              </Button>
-            )}
-          </div>
+        <span className="mt-auto inline-flex items-center gap-1.5 pt-7 text-sm font-medium text-link">
+          Read the case study
+          <ArrowRight className="size-4 transition group-hover:translate-x-1" />
+        </span>
+      </div>
+
+      <div
+        className={cn("min-w-0 p-4 sm:p-6", wide ? "lg:pl-0" : "order-1 pb-0 sm:pb-0")}
+        style={{ background: "linear-gradient(180deg, color-mix(in srgb, var(--cobalt) 10%, transparent), transparent 70%)" }}
+      >
+        {project.image ? (
+          <BrowserFrame src={project.image} alt={`${project.name}, running`} url={project.live ?? project.repo ?? ""} />
+        ) : (
+          <CodeCard />
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </Link>
   );
 }

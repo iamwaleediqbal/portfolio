@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight, Download, Github, Mail, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Download, Mail, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -205,19 +205,17 @@ export default async function Home() {
                     </a>
                   </Button>
                 )}
-                {main.repo && (
-                  <Button asChild variant="outline" className="rounded-full">
-                    <a href={main.repo}>
-                      <Github className="size-4" /> Source
-                    </a>
-                  </Button>
-                )}
+                <Button asChild variant="outline" className="rounded-full">
+                  <Link href={`/projects/${main.slug}`}>
+                    Case study <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
               </div>
               <p className="mt-auto pt-7 text-sm text-muted-foreground">
                 Built on two companion repos:{" "}
                 {companions.map((c, i) => (
                   <span key={c.slug}>
-                    <Link href={`/projects#${c.slug}`} className="font-mono text-link hover:underline">
+                    <Link href={`/projects/${c.slug}`} className="font-mono text-link hover:underline">
                       {c.name}
                     </Link>
                     {i < companions.length - 1 ? " and " : "."}
@@ -250,16 +248,10 @@ export default async function Home() {
                 <div className="flex flex-1 flex-col p-6 sm:p-7">
                   <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">Live product</p>
                   <h3 className="mt-2 font-display text-2xl font-extrabold">{product.name}</h3>
-                  <p className="mt-2 text-muted-foreground">{product.tagline}</p>
+                  <p className="mt-2 text-muted-foreground">{product.summary}</p>
                   <p className="mt-4 rounded-2xl border bg-background/50 p-3 text-sm">
-                    <span className="font-display text-lg font-extrabold text-sun-ink">
-                      {product.slug === "anchorly" ? "51 / 51" : "29,360"}
-                    </span>{" "}
-                    <span className="text-muted-foreground">
-                      {product.slug === "anchorly"
-                        ? "right product found in testing, with no invented product or price"
-                        : "authentic hadith pass every gate, out of 69,408 stored"}
-                    </span>
+                    <span className="font-display text-lg font-extrabold text-sun-ink">{product.stats[0].value}</span>{" "}
+                    <span className="text-muted-foreground">{product.stats[0].label}</span>
                   </p>
                   <div className="mt-auto flex flex-wrap gap-2 pt-6">
                     {product.live && (
@@ -270,7 +262,7 @@ export default async function Home() {
                       </Button>
                     )}
                     <Button asChild size="sm" variant="ghost" className="rounded-full">
-                      <Link href={`/projects#${product.slug}`}>How it works</Link>
+                      <Link href={`/projects/${product.slug}`}>Case study</Link>
                     </Button>
                   </div>
                 </div>
@@ -284,8 +276,8 @@ export default async function Home() {
       <section className="mx-auto max-w-6xl px-3 py-16 sm:px-5">
         <SectionHead
           kicker="Live from GitHub"
-          title="Public activity, fetched as you load the page."
-          note="Most of my production work lives in private company repositories, so this is the public slice: open source, products and experiments."
+          title="My GitHub, fetched as you load the page."
+          note="Public repos open on GitHub. My own private repos are shown with a lock and open their case study instead. Work done for employers stays private and is not listed."
         />
         <Reveal>
           <GitHubLive initial={github} />
@@ -339,7 +331,7 @@ export default async function Home() {
               </div>
             </div>
             <div className="mx-auto w-full max-w-[260px] rounded-[28px] bg-sun p-6 text-ink">
-              <Watcher label={false} />
+              <Watcher />
               <p className="mt-2 text-center font-display text-lg font-extrabold">Still watching.</p>
             </div>
           </div>
