@@ -64,6 +64,16 @@ export interface Shot {
   url: string;
   width?: number;
   height?: number;
+  /** Full width in the gallery rather than half. */
+  wide?: boolean;
+}
+
+export interface Demo {
+  src: string;
+  poster: string;
+  captions?: string;
+  title: string;
+  caption: string;
 }
 
 export interface Project {
@@ -89,6 +99,8 @@ export interface Project {
   decisions: { title: string; body: string }[];
   results: string[];
   gallery: Shot[];
+  /** A recorded walkthrough, shown above the screenshots. */
+  demo?: Demo;
 }
 
 export const projects: Project[] = [
@@ -173,7 +185,7 @@ export const projects: Project[] = [
       "At this number of runs most models are statistically tied, and the leaderboard says so instead of inventing a winner.",
     ],
     gallery: [
-      { src: "/shots/agentscore-run.webp", alt: "One run in the agentscore console", caption: "One run: what the task required, what changed, and what nobody asked for.", url: "agentscore-sigma.vercel.app/runs" },
+      { src: "/shots/agentscore-run.webp", alt: "One run in the agentscore console", caption: "One run: what the task required, what changed, and what nobody asked for.", url: "agentscore-sigma.vercel.app/runs", wide: true },
       { src: "/shots/agentscore-models.webp", alt: "Models page with 95% intervals", caption: "Models ranked by interval. Overlaps are marked as ties.", url: "agentscore-sigma.vercel.app/models" },
       { src: "/shots/agentscore-graders.webp", alt: "The grading rule", caption: "The whole grading rule, as it runs.", url: "agentscore-sigma.vercel.app/graders" },
     ],
@@ -347,7 +359,7 @@ export const projects: Project[] = [
       "An AI shopping assistant for Shopify stores. It answers every shopper question from the store's own catalogue and policies.",
     summary:
       "Answers questions about products, prices, stock and policies from the store's own data. Facts come from live lookups, never from model memory.",
-    facts: { role: "Solo, end to end", year: "2026", status: "In production", runs: "Railway and Neon" },
+    facts: { role: "Solo, end to end", year: "2026", status: "Live, early access", runs: "Railway and Neon" },
     live: "https://anchorlychat.com",
     image: "/shots/anchorly.webp",
     stats: [
@@ -401,7 +413,7 @@ export const projects: Project[] = [
       { title: "Testing", body: "One test store holding 280 products from seven vendors: shoes, cosmetics with no descriptions, coffee, bedding, pet gear, olive oil, and a German catalogue." },
       { title: "Model choice", body: "Three models on the same 66 conversations. gpt-4o-mini matched Claude Haiku at a tenth of the price, so it shipped." },
       { title: "Quality", body: "About 290 tests that run without Postgres, Redis or a model. make verify runs types, tests and the production build before a push." },
-      { title: "Cost control", body: "Development is locked to free models: the gateway refuses paid ones outside production." },
+      { title: "Pricing and cost", body: "Flat plans from $29 to $499 a month, billed through Shopify, with a 7 day trial. Development is locked to free models." },
     ],
     decisions: [
       { title: "Facts come from tools", body: "Prices, stock, variants and policies are database lookups made when the shopper asks. The prompt is only a second line of defence." },
@@ -415,13 +427,22 @@ export const projects: Project[] = [
       "51 of 51 right products, 8 of 8 honest \"not sold\" answers, 7 of 7 follow ups, and no invented links or prices.",
       "Testing on varied catalogues caught real bugs: a safety check had blocked 5 correct replies, and no single similarity threshold worked across stores.",
       "Unanswered questions are deduplicated and counted, so support volume becomes a list of what to write next.",
-      "Merchants can run audits that write questions from their own catalogue and grade the answers.",
+      "Audits show the misses too. On the demo store: 12 of 15 answers correct, and the right information found 10 of 15 times.",
+      "Setup is three steps: install from Shopify, answer a few questions, switch it on in the theme editor. Nothing to train, no theme code.",
     ],
+    demo: {
+      src: "/media/anchorly-demo.mp4",
+      poster: "/media/anchorly-demo-poster.jpg",
+      captions: "/media/anchorly-demo.en.vtt",
+      title: "Watch it on a real store",
+      caption: "Under three minutes on the demo store, recorded as it happened: search by photo, live stock, add to cart, a sold out size, and a refund policy it will not invent.",
+    },
     gallery: [
-      { src: "/shots/anchorly-admin.webp", alt: "Anchorly merchant dashboard", caption: "The merchant side: unanswered questions, audits and switches.", url: "anchorlychat.com" },
-      { src: "/shots/anchorly-look.webp", alt: "Anchorly finding a bag by colour", caption: "Found by how it looks. The tote has no description at all.", url: "larkfield demo store", width: 1040, height: 900 },
-      { src: "/shots/anchorly-language.webp", alt: "Anchorly answering in German", caption: "Asked in German, answered in German from an English catalogue.", url: "larkfield demo store", width: 1040, height: 900 },
-      { src: "/shots/anchorly-policy.webp", alt: "Anchorly declining to invent a policy", caption: "No refund policy published, so it does not invent one.", url: "larkfield demo store", width: 1040, height: 900 },
+      { src: "/shots/anchorly-demo-compare.webp", alt: "Anchorly comparing two watches", caption: "Comparing two products, with where each fact came from: catalogue, description, photo, live price.", url: "anchorlychat.com", width: 1198, height: 534, wide: true },
+      { src: "/shots/anchorly-demo-german.webp", alt: "Anchorly answering in German", caption: "Asked in German on a store written in English.", url: "anchorlychat.com", width: 1198, height: 554 },
+      { src: "/shots/anchorly-demo-discount.webp", alt: "Anchorly declining a discount code", caption: "Asked for something it has no way to give.", url: "anchorlychat.com", width: 1198, height: 534 },
+      { src: "/shots/anchorly-cards.webp", alt: "What shoppers get", caption: "Product cards with live price and stock, and one tap to the cart.", url: "anchorlychat.com", width: 1280, height: 1250 },
+      { src: "/shots/anchorly-admin.webp", alt: "Anchorly merchant dashboard", caption: "The merchant side, inside Shopify admin. Sample data, except the audit, which is real.", url: "anchorlychat.com", width: 1280, height: 1075 },
     ],
   },
 
@@ -502,7 +523,7 @@ export const projects: Project[] = [
       "Live on the web with an Android app, free and without ads, in Arabic, Urdu, English, Bengali, Hindi, Turkish, Indonesian and Malay.",
     ],
     gallery: [
-      { src: "/shots/quran-sources.webp", alt: "Sources and method section", caption: "Only what can be traced: the numbers behind every answer.", url: "myqurancompanion.com" },
+      { src: "/shots/quran-sources.webp", alt: "Sources and method section", caption: "Only what can be traced: the numbers behind every answer.", url: "myqurancompanion.com", wide: true },
       { src: "/shots/quran-how.webp", alt: "How it works section", caption: "A gentle reply, with its sources in full.", url: "myqurancompanion.com" },
       { src: "/shots/quran-checker.webp", alt: "Hadith checker guide", caption: "A guide to checking a hadith you heard.", url: "myqurancompanion.com/hadith-checker" },
     ],

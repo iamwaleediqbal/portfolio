@@ -1,0 +1,43 @@
+WEBVTT
+
+NOTE Live recording on a real Shopify store. Matches the captions burned into the video; times are set in design/video/build.sh.
+
+1
+00:00:00.000 --> 00:00:04.000
+A real Shopify store, running Anchorly
+Larkfield Outfitters is a demo brand with 17 products. Every answer here is the live assistant.
+
+2
+00:00:04.000 --> 00:00:31.400
+Finds products by how they look
+The tote has no description at all. The match comes from its photo, described once at sync.
+
+3
+00:00:31.400 --> 00:00:49.700
+Prices and stock, read at the moment of asking
+“It” is resolved from the conversation, then checked against the catalogue.
+
+4
+00:00:49.700 --> 00:01:27.900
+The shopper adds to cart — the AI never does
+Cards come from the catalogue. One tap adds through Shopify’s own cart, then View cart or Checkout.
+
+5
+00:01:27.900 --> 00:01:54.700
+Matches what shoppers mean
+“Hiking in the rain” finds the waterproof boot first. Products with sizes offer Choose size.
+
+6
+00:01:54.700 --> 00:02:09.900
+Size by size, never a guess
+US 11 is sold out — and it says so.
+
+7
+00:02:09.900 --> 00:02:26.300
+Says when the store doesn’t sell it
+No tents in the catalogue, so no tents are invented.
+
+8
+00:02:26.300 --> 00:02:50.000
+If you haven’t written it, it won’t make it up
+No refund policy is published, so it offers to take the shopper’s email for the store.

@@ -50,7 +50,7 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
     { id: "how", label: "How I ran it" },
     { id: "decisions", label: "Key decisions" },
     { id: "results", label: "Results" },
-    ...(project.gallery.length ? [{ id: "screens", label: "Screens" }] : []),
+    ...(project.gallery.length || project.demo ? [{ id: "screens", label: "Screens" }] : []),
   ];
   const number = (id: string) => String(sections.findIndex((s) => s.id === id) + 1).padStart(2, "0");
 
@@ -237,22 +237,35 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
             )}
           </section>
 
-          {project.gallery.length > 0 && (
+          {(project.gallery.length > 0 || project.demo) && (
             <section>
               <SectionTitle id="screens" kicker={`${number("screens")} · Screens`} title="From the live product" />
-              <div className="grid gap-6 md:grid-cols-6">
-                {project.gallery.map((shot) => {
-                  // Wide screenshots sit two to a row, tall ones three, and an odd wide one out leads at full width.
-                  const tall = (shot.height ?? 800) > (shot.width ?? 1280) * 0.75;
-                  const wide = project.gallery.filter((s) => (s.height ?? 800) <= (s.width ?? 1280) * 0.75);
-                  const span = tall ? "md:col-span-2" : wide.length % 2 === 1 && wide.indexOf(shot) === 0 ? "md:col-span-6" : "md:col-span-3";
-                  return (
-                  <figure key={shot.src} className={cn("group m-0", span)}>
+              {project.demo && (
+                <figure className="m-0 mb-8">
+                  <div className="overflow-hidden rounded-2xl border bg-black shadow-[0_30px_80px_-40px_rgb(0_0_0/0.7)]">
+                    <video
+                      controls
+                      preload="none"
+                      playsInline
+                      poster={project.demo.poster}
+                      className="aspect-video h-auto w-full"
+                    >
+                      <source src={project.demo.src} type="video/mp4" />
+                      {project.demo.captions && <track kind="captions" src={project.demo.captions} srcLang="en" label="English" default />}
+                    </video>
+                  </div>
+                  <figcaption className="mt-3 text-sm text-muted-foreground">
+                    <span className="font-medium text-foreground">{project.demo.title}.</span> {project.demo.caption}
+                  </figcaption>
+                </figure>
+              )}
+              <div className="grid items-start gap-6 md:grid-cols-2">
+                {project.gallery.map((shot) => (
+                  <figure key={shot.src} className={cn("group m-0", shot.wide && "md:col-span-2")}>
                     <BrowserFrame src={shot.src} alt={shot.alt} url={shot.url} width={shot.width} height={shot.height} />
                     <figcaption className="mt-3 text-sm text-muted-foreground">{shot.caption}</figcaption>
                   </figure>
-                  );
-                })}
+                ))}
               </div>
             </section>
           )}
