@@ -37,7 +37,7 @@ export const profile = {
     "Today I am one of the core engineers on an agent evaluation platform used daily by about 500 people across engineering, review and delivery teams. On its busiest days it runs more than 2,000 evaluations across 10 to 15 simulated web apps, plus full Ubuntu and Windows desktops for OSWorld, on FastAPI, Celery, Redis, PostgreSQL and Next.js across GCP and AWS.",
     "It drives OpenAI, Anthropic and Gemini, plus Qwen3-VL and UI-TARS self hosted on vLLM, through one code path. That is harder than it sounds: every provider returns a different action format, in a different coordinate space, with token accounting that disagrees about what it is counting. All of it has to mean the same thing before anything downstream can use it.",
     "The earlier years are where the engineering habits came from: client products with real deadlines, a Shopify app with Stripe billing and idempotent webhooks, and leading delivery for three client products as a senior engineer at Softaims.",
-    "Outside that I built Anchorly, a live AI shopping assistant for Shopify stores, and I publish my own agent evaluation stack in the open: a provider layer, a harness that drives and grades a run, and the application it drives. Every number about those projects comes from a recorded run you can open.",
+    "Outside that I run two public products, Anchorly, an AI shopping assistant for Shopify stores, and My Quran Companion, which answers only from the Quran and authentic hadith. My main open source project is agentscore, an evaluation harness for computer use agents, with two companion repos it is built on. Every number about it comes from a recorded run you can open.",
   ],
   // Facts about the work, not about the website. Anything that only makes sense
   // to whoever built this page does not belong on it.
@@ -180,6 +180,11 @@ export const cycle = {
 export interface Project {
   slug: string;
   name: string;
+  /**
+   * Where it sits. agentscore is the main project, polyact and clickmail exist
+   * to serve it, and the products are live things people use.
+   */
+  kind: "main" | "companion" | "product";
   tagline: string;
   /** The part this piece plays in the stack, for a reader meeting it cold. */
   part?: string;
@@ -194,11 +199,36 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    slug: "agentscore",
+    name: "agentscore",
+    kind: "main",
+    tagline: "My main open source project: an evaluation harness for computer use agents",
+    status: "open source",
+    part: "The main project. It is the only piece that talks to a model and the one that decides what a run was worth. polyact and clickmail below exist to serve it.",
+    what: "Opens an environment in a real browser, fetches the world before the task and after it, and grades one snapshot against the other — never the route taken. Both snapshots are kept, so a change to the grading logic is retested against every past run without a single model call. A separate suite repeats short tasks across free models and reports intervals rather than numbers.",
+    why: "One run is not a result. A leaderboard built from single runs reorders itself nightly for no reason anyone can explain.",
+    stack: ["Next.js", "TypeScript", "Playwright", "Python", "OpenRouter"],
+    repo: "https://github.com/iamwaleediqbal/agentscore",
+    live: "https://agentscore-sigma.vercel.app",
+    highlights: [
+      "48 recorded runs so far: 6 tasks across 5 models in both action spaces, for $0.65 of model spend in total. Three of the five models score strictly better reading the screen as text than as pixels; one is the other way round. A single blended score would have hidden that entirely, which is why the two are never averaged.",
+      "Regrading is one command. Every run keeps the before and after snapshot, so after a change to the grading logic, npm run regrade scores all past runs again with no model call, no browser and no environment, and lists exactly which verdicts moved. Its tests reproduce all 48 published verdicts from the snapshots alone.",
+      "Wilson intervals, so three out of three reports 100% with a lower bound near 44%, which is the correct amount of confidence to have in three attempts.",
+      "Overlapping intervals share a rank and are marked tied. Ranking them anyway invents a difference the data cannot support.",
+      "Deterministic checks run first. A judge is a model, so it brings its own variance on top of the variance you were trying to measure, and it is a last resort rather than a default.",
+      "The browser runner carries polyact's coordinate rules in TypeScript, because a paid Gemini run proved it needs them: Gemini answered on a 0-1000 grid while the harness read most of its clicks as pixels, so the clicks landed where it had never aimed and the model was scored for the harness's arithmetic.",
+      "Every turn is a real tool call. The two action spaces differ in what the model is shown and what it can name — not in how it replies, because a difference in transport would show up in the comparison as if it were a difference in skill.",
+      "The console shows the system prompts exactly as sent, generated from the same constants the runner uses rather than transcribed — a benchmark that paraphrases what it told the model is not reproducible by anyone reading it.",
+      "Runs in GitHub Actions on demand and commits a JSON file. No server, no database, no key on the deployment — and no schedule, because a benchmark nobody watched is a number nobody should trust.",
+    ],
+  },
+  {
     slug: "polyact",
     name: "polyact",
+    kind: "companion",
     tagline: "One action schema for computer-use agents",
     status: "open source",
-    part: "The foundation. Everything above it can stay ignorant of which provider answered, because this is where four formats become one.",
+    part: "Companion to agentscore. It is where four provider formats become one, so the harness never has to know which provider answered.",
     what: "A Python library that turns four incompatible provider response formats into one record, in real screen pixels, with token accounting that survives a provider change.",
     why: "The largest source of quiet, score-corrupting bugs in agent evaluation is not prompting or grading. It is that providers disagree about what their own output means, and the disagreements do not raise. They degrade.",
     stack: ["Python", "async", "pytest"],
@@ -211,33 +241,12 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "agentscore",
-    name: "agentscore",
-    tagline: "The harness: drive it, grade it, and repeat it enough times to mean something",
-    status: "open source",
-    part: "The harness. The only piece here that talks to a model, and the one that decides what a run was worth.",
-    what: "Opens an environment in a real browser, fetches the world before the task and after it, and grades one snapshot against the other — never the route taken. Both snapshots are kept, so a change to the grading logic is retested against every past run without a single model call. A separate suite repeats short tasks across free models and reports intervals rather than numbers.",
-    why: "One run is not a result. A leaderboard built from single runs reorders itself nightly for no reason anyone can explain.",
-    stack: ["Next.js", "TypeScript", "Playwright", "Python", "OpenRouter"],
-    repo: "https://github.com/iamwaleediqbal/agentscore",
-    live: "https://agentscore-sigma.vercel.app",
-    highlights: [
-      "48 recorded runs so far: 6 tasks across 5 models in both action spaces, for $0.65 of model spend in total. Three of the five models score strictly better reading the screen as text than as pixels; one is the other way round. A single blended score would have hidden that entirely, which is why the two are never averaged.",
-      "Wilson intervals, so three out of three reports 100% with a lower bound near 44%, which is the correct amount of confidence to have in three attempts.",
-      "Overlapping intervals share a rank and are marked tied. Ranking them anyway invents a difference the data cannot support.",
-      "Deterministic checks run first. A judge is a model, so it brings its own variance on top of the variance you were trying to measure, and it is a last resort rather than a default.",
-      "The browser runner carries polyact's coordinate rules in TypeScript, because a paid Gemini run proved it needs them: Gemini answered on a 0-1000 grid while the harness read most of its clicks as pixels, so the clicks landed where it had never aimed and the model was scored for the harness's arithmetic.",
-      "Every turn is a real tool call. The two action spaces differ in what the model is shown and what it can name — not in how it replies, because a difference in transport would show up in the comparison as if it were a difference in skill.",
-      "The console shows the system prompts exactly as sent, generated from the same constants the runner uses rather than transcribed — a benchmark that paraphrases what it told the model is not reproducible by anyone reading it.",
-      "Runs in GitHub Actions on demand and commits a JSON file. No server, no database, no key on the deployment — and no schedule, because a benchmark nobody watched is a number nobody should trust.",
-    ],
-  },
-  {
     slug: "clickmail",
     name: "clickmail",
+    kind: "companion",
     tagline: "The application under test, and nothing else",
     status: "live demo",
-    part: "The target. It knows nothing about models, tasks or grading, and that ignorance is the feature — it is what keeps the harness honest.",
+    part: "Companion to agentscore. It is the application the harness drives, and it knows nothing about models, tasks or grading, which is what keeps the harness honest.",
     what: "A public mail client — fifty-two messages, seven folders, search, labels, spam — that exists to be operated by something that is not a person. It publishes a small read-and-reset contract and knows nothing about tasks, grading or models.",
     why: "An environment that contains its own grader can only ever score itself. Separating them is what makes \"point the harness at a real application\" a question of writing an adapter rather than rewriting the grader.",
     stack: ["Next.js", "TypeScript", "Vercel"],
@@ -256,20 +265,40 @@ export const projects: Project[] = [
   {
     slug: "anchorly",
     name: "Anchorly",
+    kind: "product",
     tagline: "A retrieval grounded AI shopping assistant for Shopify stores",
     status: "product",
-    part: "The outlier: a live product for Shopify merchants, rather than infrastructure.",
+    part: "A public product: an AI shopping assistant live for Shopify merchants.",
     what: "Syncs each store's products, pages and policies into PostgreSQL with pgvector, and describes every product photo once with a vision model so shoppers can search by how items look. Price and stock come from live tool calls, never from model memory or stuffed context.",
     why: "Competing chatbot apps get churned over for inventing prices and fabricating policies. The whole architecture exists to make that class of failure structurally impossible rather than merely unlikely.",
     stack: ["Node.js", "TypeScript", "Shopify Remix", "Prisma", "PostgreSQL", "pgvector", "BullMQ", "OpenRouter"],
     live: "https://anchorlychat.com",
     highlights: [
-      "Tested on the public catalogs of 7 real Shopify stores, 280 products in all, it found the right product 51 out of 51 times and never invented a product or a price.",
+      "Tested on one store of 280 products from different vendors and niches, it found the right product 51 out of 51 times and never invented a product or a price.",
       "Below a relevance floor it declines and takes the shopper's email instead of guessing. It answered honestly all 8 times a store did not sell what the shopper asked for.",
       "Hybrid retrieval, vectors plus keyword search fused with Reciprocal Rank Fusion, so exact product names and codes still match.",
       "A one time store setup runs on a stronger model and daily chat runs on low cost models, with tools scoped to what a shopper is allowed to see.",
       "Capability switches are enforced by removing tools, not by asking the model nicely, and built in audits grade answers against the store's own catalog.",
       "Unanswered questions are deduplicated and counted, which turns support volume into a list of what to write next.",
+    ],
+  },
+  {
+    slug: "my-quran-companion",
+    name: "My Quran Companion",
+    kind: "product",
+    tagline: "An AI companion that answers only from the Quran and authentic hadith",
+    status: "product",
+    part: "A public product: free, with no ads, live on the web with an Android app.",
+    what: "People ask a question in their own language and get an answer built only from the Quran and authentic hadith, with every source shown as a card with its reference and grade. The model never writes scripture itself. It picks numbered sources, and the app shows their exact text from its own database.",
+    why: "A general chatbot will happily invent a hadith or misquote an ayah, and in this subject a made up source is the worst possible failure. The design makes that failure something the system catches, not something it hopes to avoid.",
+    stack: ["Python", "FastAPI", "LangGraph", "PostgreSQL", "pgvector", "Expo", "React Native", "Anthropic", "OpenRouter"],
+    live: "https://myqurancompanion.com",
+    highlights: [
+      "Any reply that cites, quotes or numbers something outside the retrieved sources is rejected and retried once, then replaced by a fixed message that shows the sources.",
+      "A hadith reaches a reply only if it passes every authenticity gate: graded sahih or hasan, full text, a connected chain, and Arabic checked against an independent copy. 29,360 of the 69,408 stored hadith pass.",
+      "People can check a saying they heard. An Arabic quote is matched word for word, and the reply says whether a source matches, is similar or was not found.",
+      "Eight languages including Arabic and Urdu, with the layout switching to right to left, from one Expo codebase for web and Android.",
+      "Scripture lives in its own database behind a read only role. What people write is encrypted with AES-256-GCM, and every model call is logged with its cost.",
     ],
   },
 ];

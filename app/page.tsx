@@ -131,18 +131,18 @@ export default function Home() {
       <section className="border-t">
         <div className="mx-auto max-w-4xl px-5 py-14 sm:px-6">
           <SectionLabel tone="chart-2">Selected work</SectionLabel>
-          {/* The three open ones are not three libraries, they are three seams
-              of one problem. Said here so the cards below are read in order. */}
+          {/* The main project first, then the products. polyact and clickmail
+              are agentscore's companions, so they live on its page, not here. */}
           <p className="mb-5 max-w-[68ch] text-[15px] leading-relaxed text-muted-foreground">
-            The three open source projects below are one system taken apart: translating what a model
-            answered, judging what it did, and repeating it enough times to mean something.{" "}
+            agentscore is my main open source project, an evaluation harness for computer use agents,
+            built on two companion repos. Anchorly and My Quran Companion are live products people use.{" "}
             <Link href="/projects" className="font-medium text-foreground underline underline-offset-4">
-              How they fit together
+              See how it all fits together
             </Link>
             .
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
-            {projects.slice(0, 4).map((project, index) => (
+            {projects.filter((project) => project.kind !== "companion").map((project, index) => (
               <Reveal key={project.slug} delay={index * 55}>
                 <Card className="relative h-full gap-0 overflow-hidden pt-0">
                   <span
